@@ -2003,36 +2003,68 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Bubble Rooms")}
             />
 
-            {/* Beer Point - Far left top */}
+            {/* Bubble Room 1*/}
             <rect
               x="234"
               y="2"
               width="110"
-              height="250"
-              fill={getSectionColor("beer point")}
+              height="125" // 250
+              fill={getSectionColor("bubble room 1")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "beer point" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "bubble room 1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("beer point")}
+              onMouseEnter={() => setHoveredSection("bubble room 1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("beer point")}
+              onClick={() => handleSectionClick("bubble room 1")}
             />
 
-            {/* Bookster Area - Far left bottom */}
+            {/* Bubble Room 2*/}
+            <rect
+              x="234"
+              y="127"
+              width="110"
+              height="125" // 250
+              fill={getSectionColor("bubble room 2")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "bubble room 2" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("bubble room 2")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("bubble room 2")}
+            />
+
+            {/* Bubble Room 3*/}
             <rect
               x="234"
               y="789"
               width="110"
-              height="246"
-              fill={getSectionColor("Bookster Area")}
+              height="123"
+              fill={getSectionColor("bubble room 3")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "Bookster Area" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "bubble room 3" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Bookster Area")}
+              onMouseEnter={() => setHoveredSection("bubble room 3")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bookster Area")}
+              onClick={() => handleSectionClick("bubble room 3")}
+            />
+
+            {/* Bubble Room 4*/}
+            <rect
+              x="234"
+              y="912" 
+              width="110"
+              height="123"
+              fill={getSectionColor("bubble room 4")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "bubble room 4" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("bubble room 4")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("bubble room 4")}
             />
 
             {/* Management Office 3 - Far right top */}
