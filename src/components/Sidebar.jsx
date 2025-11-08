@@ -1,18 +1,33 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import SwitchAvatar from './SwitchAvatar';
 
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
     if (userString) {
-      setUser(JSON.parse(userString));
+      const userData = JSON.parse(userString);
+      setUser(userData);
+      setAvatarUrl(userData.image || null);
     }
   }, []);
+
+  const handleAvatarUpdate = (newAvatarUrl) => {
+    setAvatarUrl(newAvatarUrl);
+    
+    // Update user object in localStorage
+    if (user) {
+      const updatedUser = { ...user, image: newAvatarUrl };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -88,19 +103,31 @@ function Sidebar() {
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
           }}
         >
-          <div style={{
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(135deg, #0067AC, #002147)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '2.5rem',
-            fontWeight: 'bold'
-          }}>
-            {user?.name ? user.name.charAt(0).toUpperCase() : 'N/A'}
-          </div>
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={user?.name || 'User avatar'}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(135deg, #0067AC, #002147)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '2.5rem',
+              fontWeight: 'bold'
+            }}>
+              {user?.name ? user.name.charAt(0).toUpperCase() : 'N/A'}
+            </div>
+          )}
         </motion.div>
         <h3 style={{
           color: 'white',
@@ -112,13 +139,18 @@ function Sidebar() {
         </h3>
         <p style={{
           color: '#a0aec0',
-          fontSize: '0.875rem'
+          fontSize: '0.875rem',
+          marginBottom: '1rem'
         }}>
           {user?.email || 'not logged in'}
           {' Role:'+(user?.role ? ` ${user.role}` : ' N/A')}
         </p>
+        
+        <SwitchAvatar 
+          currentAvatar={avatarUrl}
+          onAvatarUpdate={handleAvatarUpdate}
+        />
       </div>
-
       {/* Navigation */}
       <nav style={{
         flex: 1,
