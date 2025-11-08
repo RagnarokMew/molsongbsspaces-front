@@ -7,8 +7,10 @@ const FloorPlanSVG = () => {
   const [selectedSection, setSelectedSection] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bookings, setBookings] = useState([]);
+  const [desks, setDesks] = useState([]); // Store all desk data
+  const [loadingDesks, setLoadingDesks] = useState(true);
 
-  // Update current time every minute
+  // Update current time every second for real-time updates
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -17,8 +19,9 @@ const FloorPlanSVG = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch bookings (mock data for now)
+  // Fetch all desks from backend API
   useEffect(() => {
+<<<<<<< Updated upstream
     // Mock bookings - replace with API call
     const mockBookings = [
       {
@@ -29,6 +32,52 @@ const FloorPlanSVG = () => {
       },
     ];
     setBookings(mockBookings);
+=======
+    const fetchDesks = async () => {
+      try {
+        setLoadingDesks(true);
+        console.log('🔄 Fetching all desks from backend...');
+        
+        const token = localStorage.getItem('token');
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch('https://molsongbsspaces.onrender.com/api/desk/all', {
+          method: 'GET',
+          headers: headers,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch desks: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Fetched desks data:', data);
+        
+        // Handle if data is wrapped in a 'data' property
+        const desksData = data.data || data;
+        setDesks(Array.isArray(desksData) ? desksData : []);
+        console.log(`✅ Loaded ${Array.isArray(desksData) ? desksData.length : 0} desks`);
+      } catch (error) {
+        console.error('❌ Error fetching desks:', error);
+        setDesks([]);
+      } finally {
+        setLoadingDesks(false);
+      }
+    };
+
+    fetchDesks();
+    
+    // Refresh desk data every 30 seconds for live updates
+    const refreshInterval = setInterval(fetchDesks, 30000);
+    
+    return () => clearInterval(refreshInterval);
+>>>>>>> Stashed changes
   }, []);
 
   // Define sections with their boundaries and colors
@@ -372,7 +421,69 @@ const FloorPlanSVG = () => {
     { id: 'B_Table18.M6', x: 1748 + 44 + 88 * 9 + 416, y: 798 + 49 * 2, width: 44, height: 49 },
   ];
 
+  // Check if a desk/table is available based on real-time backend data
+  const isDeskAvailable = (deskId) => {
+    if (loadingDesks) return true; // Show as available while loading
+    
+    // Find the desk in our fetched data
+    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    
+    if (!desk) {
+      // Desk not found in backend, assume available
+      return true;
+    }
+
+    const now = new Date();
+    
+    // Check attendances (primary - current format from backend)
+    if (desk.attendances && desk.attendances.length > 0) {
+      const hasActiveAttendance = desk.attendances.some(attendance => {
+        // Check if attendance is pending or active
+        if (attendance.status === 'pending' || attendance.status === 'active') {
+          const attendanceStart = new Date(attendance.start);
+          const attendanceEnd = attendance.end ? new Date(attendance.end) : null;
+          
+          // If there's a start time but no end time, it's currently occupied
+          if (!attendanceEnd) {
+            return now >= attendanceStart;
+          }
+          
+          // Check if current time is within attendance period
+          return now >= attendanceStart && now <= attendanceEnd;
+        }
+        return false;
+      });
+      
+      if (hasActiveAttendance) return false; // Occupied
+    }
+
+    // Check bookings (fallback - legacy format)
+    if (desk.bookings && desk.bookings.length > 0) {
+      const hasActiveBooking = desk.bookings.some(booking => {
+        const bookingStart = new Date(booking.startTime || booking.start);
+        const bookingEnd = new Date(booking.endTime || booking.end);
+        
+        // Check if current time is within booking period
+        return now >= bookingStart && now <= bookingEnd;
+      });
+      
+      if (hasActiveBooking) return false; // Booked
+    }
+
+    return true; // Available if no active attendance or booking
+  };
+
+  // Legacy function for sections (non-table areas)
   const isAvailable = (sectionName) => {
+    // For individual tables, use the new desk availability check
+    if (sectionName.includes('Table') && sectionName.includes('UP')) {
+      return isDeskAvailable(sectionName);
+    }
+    if (sectionName.includes('Table') && sectionName.includes('DOWN')) {
+      return isDeskAvailable(sectionName);
+    }
+
+    // For other sections, use old logic
     const currentHour = currentTime.getHours();
     const currentDate = currentTime.toISOString().split("T")[0];
 
@@ -385,6 +496,87 @@ const FloorPlanSVG = () => {
     );
 
     return !sectionBooking;
+  };
+
+  // Get detailed booking information for a desk
+  const getDeskInfo = (deskId) => {
+    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    
+    if (!desk) {
+      return {
+        name: deskId,
+        status: 'Unknown',
+        available: true,
+        attendances: [],
+        bookings: []
+      };
+    }
+
+    const now = new Date();
+    let currentBooking = null;
+    let nextBooking = null;
+    let currentAttendance = null;
+    let nextAttendance = null;
+
+    // Check attendances first (primary format)
+    if (desk.attendances && desk.attendances.length > 0) {
+      // Find current active attendance
+      currentAttendance = desk.attendances.find(attendance => {
+        if (attendance.status === 'pending' || attendance.status === 'active') {
+          const attendanceStart = new Date(attendance.start);
+          const attendanceEnd = attendance.end ? new Date(attendance.end) : null;
+          
+          if (!attendanceEnd) {
+            return now >= attendanceStart;
+          }
+          
+          return now >= attendanceStart && now <= attendanceEnd;
+        }
+        return false;
+      });
+
+      // Find next upcoming attendance
+      const upcomingAttendances = desk.attendances
+        .filter(attendance => {
+          const attendanceStart = new Date(attendance.start);
+          return attendanceStart > now;
+        })
+        .sort((a, b) => new Date(a.start) - new Date(b.start));
+      
+      nextAttendance = upcomingAttendances[0];
+    }
+
+    // Check bookings (fallback format)
+    if (desk.bookings && desk.bookings.length > 0) {
+      // Find current active booking
+      currentBooking = desk.bookings.find(booking => {
+        const bookingStart = new Date(booking.startTime || booking.start);
+        const bookingEnd = new Date(booking.endTime || booking.end);
+        return now >= bookingStart && now <= bookingEnd;
+      });
+
+      // Find next upcoming booking
+      const upcomingBookings = desk.bookings
+        .filter(booking => new Date(booking.startTime || booking.start) > now)
+        .sort((a, b) => new Date(a.startTime || a.start) - new Date(b.startTime || b.start));
+      
+      nextBooking = upcomingBookings[0];
+    }
+
+    // Prioritize attendance over booking
+    const activeItem = currentAttendance || currentBooking;
+    const upcomingItem = nextAttendance || nextBooking;
+
+    return {
+      name: desk.name || deskId,
+      id: desk._id,
+      status: activeItem ? 'Occupied' : 'Available',
+      available: !activeItem,
+      currentBooking: activeItem,
+      nextBooking: upcomingItem,
+      allBookings: [...(desk.attendances || []), ...(desk.bookings || [])],
+      isAttendance: !!currentAttendance
+    };
   };
 
   const getSectionColor = (sectionName) => {
@@ -2492,37 +2684,188 @@ const FloorPlanSVG = () => {
           <div
             style={{
               marginTop: "20px",
-              background: "white",
-              borderRadius: "8px",
-              padding: "15px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-              textAlign: "center",
+              background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+              borderRadius: "12px",
+              padding: "20px",
+              boxShadow: "0 4px 20px rgba(0, 103, 172, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05)",
+              border: "1px solid rgba(0, 103, 172, 0.1)",
             }}
           >
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                color: "#1a1a1a",
-                marginBottom: "5px",
-              }}
-            >
-              {hoveredSection}
-            </h3>
-            <p
-              style={{
-                fontSize: "14px",
-                color: isAvailable(hoveredSection) ? "#10b981" : "#ef4444",
-                fontWeight: "bold",
-              }}
-            >
-              {isAvailable(hoveredSection)
-                ? "✓ Available Now"
-                : "✗ Currently Booked"}
-            </p>
-            <p style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
-              Click to book this area
-            </p>
+            {(() => {
+              // Check if this is a table to show detailed backend info
+              const isTable = hoveredSection.includes('Table') && 
+                             (hoveredSection.includes('UP') || hoveredSection.includes('DOWN'));
+              
+              if (isTable) {
+                const deskInfo = getDeskInfo(hoveredSection);
+                const available = isAvailable(hoveredSection);
+                
+                return (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '12px' }}>
+                      <div
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          background: available ? '#10b981' : '#ef4444',
+                          boxShadow: `0 0 10px ${available ? 'rgba(16, 185, 129, 0.5)' : 'rgba(239, 68, 68, 0.5)'}`,
+                          animation: 'pulse 2s infinite'
+                        }}
+                      />
+                      <h3
+                        style={{
+                          fontSize: "20px",
+                          fontWeight: "700",
+                          color: "#0f172a",
+                          margin: 0
+                        }}
+                      >
+                        {hoveredSection}
+                      </h3>
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        padding: '6px 16px',
+                        borderRadius: '8px',
+                        background: available 
+                          ? 'linear-gradient(135deg, #ecfdf5, #d1fae5)' 
+                          : 'linear-gradient(135deg, #fef2f2, #fee2e2)',
+                        border: available ? '1px solid #86efac' : '1px solid #fca5a5',
+                        marginBottom: '12px'
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "15px",
+                          color: available ? "#065f46" : "#991b1b",
+                          fontWeight: "700",
+                          margin: 0
+                        }}
+                      >
+                        {available ? "✓ Available Now" : (deskInfo.isAttendance ? "✗ Currently Occupied" : "✗ Currently Booked")}
+                      </p>
+                    </div>
+
+                    {/* Current Booking/Attendance Info */}
+                    {deskInfo.currentBooking && (
+                      <div
+                        style={{
+                          marginTop: '12px',
+                          padding: '12px',
+                          background: '#fef2f2',
+                          borderRadius: '8px',
+                          border: '1px solid #fca5a5',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#dc2626', marginBottom: '6px' }}>
+                          {deskInfo.isAttendance ? '👤 Current Attendance:' : '📅 Current Booking:'}
+                        </p>
+                        <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                          <strong>From:</strong> {new Date(deskInfo.currentBooking.start || deskInfo.currentBooking.startTime).toLocaleString()}
+                        </p>
+                        {(deskInfo.currentBooking.end || deskInfo.currentBooking.endTime) ? (
+                          <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                            <strong>Until:</strong> {new Date(deskInfo.currentBooking.end || deskInfo.currentBooking.endTime).toLocaleString()}
+                          </p>
+                        ) : (
+                          <p style={{ fontSize: '12px', color: '#f59e0b', margin: '3px 0', fontStyle: 'italic' }}>
+                            <strong>Status:</strong> Active (no end time)
+                          </p>
+                        )}
+                        {deskInfo.currentBooking.status && (
+                          <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                            <strong>Status:</strong> {deskInfo.currentBooking.status}
+                          </p>
+                        )}
+                        {deskInfo.currentBooking.userId && (
+                          <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                            <strong>User ID:</strong> {deskInfo.currentBooking.userId}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Next Booking Info */}
+                    {!deskInfo.currentBooking && deskInfo.nextBooking && (
+                      <div
+                        style={{
+                          marginTop: '12px',
+                          padding: '12px',
+                          background: '#fffbeb',
+                          borderRadius: '8px',
+                          border: '1px solid #fde047',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#d97706', marginBottom: '6px' }}>
+                          ⏰ Next {deskInfo.nextBooking.start ? 'Attendance:' : 'Booking:'}
+                        </p>
+                        <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                          <strong>Starts:</strong> {new Date(deskInfo.nextBooking.start || deskInfo.nextBooking.startTime).toLocaleString()}
+                        </p>
+                        {(deskInfo.nextBooking.end || deskInfo.nextBooking.endTime) && (
+                          <p style={{ fontSize: '12px', color: '#666', margin: '3px 0' }}>
+                            <strong>Ends:</strong> {new Date(deskInfo.nextBooking.end || deskInfo.nextBooking.endTime).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Total Bookings Count */}
+                    {deskInfo.allBookings && deskInfo.allBookings.length > 0 && (
+                      <p style={{ fontSize: '12px', color: '#64748b', marginTop: '12px', fontWeight: '500' }}>
+                        📊 Total bookings today: {deskInfo.allBookings.length}
+                      </p>
+                    )}
+
+                    <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '12px', fontStyle: 'italic' }}>
+                      Click to {available ? 'book' : 'view details'}
+                    </p>
+
+                    <style>{`
+                      @keyframes pulse {
+                        0%, 100% { opacity: 1; transform: scale(1); }
+                        50% { opacity: 0.7; transform: scale(1.1); }
+                      }
+                    `}</style>
+                  </>
+                );
+              } else {
+                // Original display for non-table sections
+                return (
+                  <>
+                    <h3
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        color: "#1a1a1a",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      {hoveredSection}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: isAvailable(hoveredSection) ? "#10b981" : "#ef4444",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {isAvailable(hoveredSection)
+                        ? "✓ Available Now"
+                        : "✗ Currently Booked"}
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+                      Click to book this area
+                    </p>
+                  </>
+                );
+              }
+            })()}
           </div>
         )}
       </div>
