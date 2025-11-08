@@ -2199,6 +2199,38 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Bubble Room 6")}
             />
 
+            {/* Cubicle 1 - TODO: see if it needs separate hitboxes for chairs*/}
+            <rect
+              x="417"
+              y="120"
+              width="48"
+              height="87"
+              fill={getSectionColor("Cubicle 1")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Cubicle 1" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Cubicle 1")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Cubicle 1")}
+            />
+
+            {/* Cubicle 2 - TODO: see if it needs separate hitboxes for chairs*/}
+            <rect
+              x="417"
+              y="828"
+              width="48"
+              height="87"
+              fill={getSectionColor("Cubicle 2")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Cubicle 2" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Cubicle 2")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Cubicle 2")}
+            />
+
             {/* */}
             <rect
               x="2847"
