@@ -51,7 +51,7 @@ export default function BubbleLegendChips({ chips = defaultChips, initialOpen = 
           zIndex: 30
         }}
       >
-        {open ? 'Hide bubble legend' : 'Show bubble legend'}
+        {open ? 'i' : 'i'}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 5v14M5 12h14" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity={open ? 0.6 : 1} transform={open ? 'rotate(45 12 12)' : 'rotate(0 12 12)'} />
         </svg>
