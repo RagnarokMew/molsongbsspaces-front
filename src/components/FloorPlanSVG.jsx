@@ -250,13 +250,6 @@ const FloorPlanSVG = () => {
     { id: 'Table 101 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
     { id: 'Table 102 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 97 UP', x: 1748 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
-    { id: 'Table 98 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 99 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 100 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
-    { id: 'Table 101 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 102 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
-
     { id: 'Table 103 UP', x: 1748 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
     { id: 'Table 104 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
     { id: 'Table 105 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
