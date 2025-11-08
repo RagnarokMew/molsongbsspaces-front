@@ -1928,7 +1928,22 @@ const FloorPlanSVG = () => {
             <rect
               x="516"
               y="88"
-              width="2529"
+              width="1030"
+              height="147"
+              fill={getSectionColor("Work Tables UP")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Work Tables UP" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Work Tables UP")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Work Tables UP")}
+            />
+
+            <rect
+              x="1748"
+              y="88"
+              width="1297"
               height="147"
               fill={getSectionColor("Work Tables UP")}
               fillOpacity="0.3"
