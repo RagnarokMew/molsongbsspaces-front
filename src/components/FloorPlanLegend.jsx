@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import BubbleLegendChips from './BubbleLegendChips';
 
 const FloorPlanLegend = ({ currentTime }) => {
   const containerVariants = {
@@ -162,48 +163,8 @@ const FloorPlanLegend = ({ currentTime }) => {
           <span style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Hover to see</span>
         </motion.div>
 
-        {/* Divider */}
-        <div style={{ 
-          width: '1px', 
-          height: '40px', 
-          background: 'linear-gradient(180deg, transparent, #cbd5e1, transparent)',
-          margin: '0 4px'
-        }} />
-
         {/* Bubble room legend chips with improved styling */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          {[
-            { color: '#60a5fa', label: 'Bubble 1', gradient: 'linear-gradient(135deg, #60a5fa, #3b82f6)' },
-            { color: '#34d399', label: 'Bubble 2', gradient: 'linear-gradient(135deg, #34d399, #10b981)' },
-            { color: '#f97316', label: 'Bubble 3', gradient: 'linear-gradient(135deg, #f97316, #ea580c)' },
-            { color: '#f472b6', label: 'Bubble 4', gradient: 'linear-gradient(135deg, #f472b6, #ec4899)' }
-          ].map((bubble, index) => (
-            <motion.div 
-              key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.1, y: -2 }}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px',
-                padding: '6px 12px',
-                background: '#ffffff',
-                borderRadius: '8px',
-                border: `1px solid ${bubble.color}40`,
-                boxShadow: `0 2px 8px ${bubble.color}20`
-              }}
-            >
-              <div style={{ 
-                width: '16px', 
-                height: '16px', 
-                background: bubble.gradient,
-                borderRadius: '4px',
-                boxShadow: `0 2px 6px ${bubble.color}40`
-              }} />
-              <span style={{ fontSize: '12px', color: '#475569', fontWeight: '600' }}>{bubble.label}</span>
-            </motion.div>
-          ))}
-        </div>
+        <BubbleLegendChips />
       </div>
 
       {/* Add keyframes for shimmer animation */}
