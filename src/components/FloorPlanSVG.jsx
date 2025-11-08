@@ -225,6 +225,7 @@ const FloorPlanSVG = () => {
             xmlns="http://www.w3.org/2000/svg"
             style={{ maxWidth: "1200px", width: "100%", height: "auto" }}
           >
+            <g stroke="#000">
             <path
               d="M233.5 1032H7V2.00055H233.5V249.501H421V319.001H626V721.001H412.5V788.501H233.5V1032Z"
               stroke="black"
@@ -1934,15 +1935,16 @@ const FloorPlanSVG = () => {
               d="M0.5 1035V0.500549L3233.5 4.00055V1035H0.5Z"
               stroke="black"
             />
+            </g>
 
             {/* Interactive Overlay Rectangles - DO NOT MODIFY SVG ABOVE */}
             
-            {/* Work Tables UP - Top middle section */}
+            {/* Work Tables UP - Top section */}
             <rect
-              x="450"
-              y="50"
-              width="2400"
-              height="280"
+              x="516"
+              y="88"
+              width="2529"
+              height="147"
               fill={getSectionColor("Work Tables UP")}
               fillOpacity="0.3"
               stroke={hoveredSection === "Work Tables UP" ? "#1a1a1a" : "transparent"}
@@ -1953,12 +1955,12 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Work Tables UP")}
             />
 
-            {/* Center - Middle of floor plan */}
+            {/* Center - Middle section */}
             <rect
-              x="650"
-              y="350"
-              width="1950"
-              height="380"
+              x="689"
+              y="315"
+              width="1937"
+              height="404"
               fill={getSectionColor("Center")}
               fillOpacity="0.3"
               stroke={hoveredSection === "Center" ? "#1a1a1a" : "transparent"}
@@ -1969,12 +1971,12 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Center")}
             />
 
-            {/* Work Tables Down - Bottom middle section */}
+            {/* Work Tables Down - Bottom section */}
             <rect
-              x="450"
-              y="750"
-              width="2400"
-              height="280"
+              x="516"
+              y="798"
+              width="2529"
+              height="147"
               fill={getSectionColor("Work Tables Down")}
               fillOpacity="0.3"
               stroke={hoveredSection === "Work Tables Down" ? "#1a1a1a" : "transparent"}
@@ -1985,12 +1987,12 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Work Tables Down")}
             />
 
-            {/* Bubble Rooms - Left side */}
+            {/* Bubble Rooms - Left side middle */}
             <rect
-              x="50"
-              y="380"
-              width="200"
-              height="320"
+              x="40"
+              y="385"
+              width="182"
+              height="265"
               fill={getSectionColor("Bubble Rooms")}
               fillOpacity="0.3"
               stroke={hoveredSection === "Bubble Rooms" ? "#1a1a1a" : "transparent"}
@@ -2001,11 +2003,11 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Bubble Rooms")}
             />
 
-            {/* Beer Point - Far left side */}
+            {/* Beer Point - Far left top */}
             <rect
-              x="230"
-              y="0"
-              width="120"
+              x="234"
+              y="2"
+              width="110"
               height="250"
               fill={getSectionColor("beer point")}
               fillOpacity="0.3"
@@ -2017,12 +2019,28 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("beer point")}
             />
 
-            {/* Management Office 3 - Far right top corner */}
+            {/* Bookster Area - Far left bottom */}
             <rect
-              x="2950"
-              y="50"
-              width="270"
-              height="200"
+              x="234"
+              y="789"
+              width="110"
+              height="246"
+              fill={getSectionColor("Bookster Area")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Bookster Area" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Bookster Area")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Bookster Area")}
+            />
+
+            {/* Management Office 3 - Far right top */}
+            <rect
+              x="3097"
+              y="6"
+              width="131"
+              height="240"
               fill={getSectionColor("ManagementOffice3")}
               fillOpacity="0.3"
               stroke={hoveredSection === "ManagementOffice3" ? "#1a1a1a" : "transparent"}
@@ -2035,10 +2053,10 @@ const FloorPlanSVG = () => {
 
             {/* Training Office - Far right middle */}
             <rect
-              x="2850"
-              y="330"
-              width="380"
-              height="380"
+              x="2847"
+              y="337"
+              width="381"
+              height="363"
               fill={getSectionColor("Training Office")}
               fillOpacity="0.3"
               stroke={hoveredSection === "Training Office" ? "#1a1a1a" : "transparent"}
@@ -2051,10 +2069,10 @@ const FloorPlanSVG = () => {
 
             {/* Management Office 2 - Far right middle bottom */}
             <rect
-              x="3090"
-              y="690"
-              width="140"
-              height="170"
+              x="3098"
+              y="700"
+              width="130"
+              height="151"
               fill={getSectionColor("ManagementOffice2")}
               fillOpacity="0.3"
               stroke={hoveredSection === "ManagementOffice2" ? "#1a1a1a" : "transparent"}
@@ -2065,12 +2083,12 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("ManagementOffice2")}
             />
 
-            {/* Management Office 1 - Far right bottom corner */}
+            {/* Management Office 1 - Far right bottom */}
             <rect
-              x="3090"
+              x="3098"
               y="850"
-              width="140"
-              height="180"
+              width="130"
+              height="178"
               fill={getSectionColor("ManagementOffice1")}
               fillOpacity="0.3"
               stroke={hoveredSection === "ManagementOffice1" ? "#1a1a1a" : "transparent"}
@@ -2079,22 +2097,6 @@ const FloorPlanSVG = () => {
               onMouseEnter={() => setHoveredSection("ManagementOffice1")}
               onMouseLeave={() => setHoveredSection(null)}
               onClick={() => handleSectionClick("ManagementOffice1")}
-            />
-
-            {/* Bookster Area - Left side offices */}
-            <rect
-              x="230"
-              y="780"
-              width="120"
-              height="250"
-              fill={getSectionColor("Bookster Area")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Bookster Area" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Bookster Area")}
-              onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bookster Area")}
             />
           </svg>
         </div>
