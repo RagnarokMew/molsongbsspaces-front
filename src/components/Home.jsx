@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,7 @@ import {
 import { Pie, Bar, Line } from 'react-chartjs-2'
 import { motion } from 'framer-motion'
 import { Activity, Users, Clock, PieChart as PieIcon, BarChart as BarIcon } from 'lucide-react'
+import JSConfetti from 'js-confetti'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend)
 
@@ -54,6 +55,30 @@ const demo = {
 }
 
 const Home = () => {
+  const [jsConfetti, setJsConfetti] = useState(null);
+
+  useEffect(() => {
+    // Initialize confetti
+    const confettiInstance = new JSConfetti();
+    setJsConfetti(confettiInstance);
+
+    // Check if we should show login confetti
+    const showConfetti = localStorage.getItem('showLoginConfetti');
+    if (showConfetti === 'true') {
+      // Remove flag
+      localStorage.removeItem('showLoginConfetti');
+      
+      // Trigger beer confetti celebration! 🍺
+      setTimeout(() => {
+        confettiInstance.addConfetti({
+          emojis: ['🍺', '🍻', '🎉', '⭐'],
+          emojiSize: 50,
+          confettiNumber: 50,
+        });
+      }, 300);
+    }
+  }, []);
+
   const pieData = useMemo(() => ({
     labels: ['Occupied', 'Free'],
     datasets: [

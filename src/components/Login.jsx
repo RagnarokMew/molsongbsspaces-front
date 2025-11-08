@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import JSConfetti from 'js-confetti';
 import '../index.css';
 
 function Login() {
@@ -9,6 +10,12 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [jsConfetti, setJsConfetti] = useState(null);
+
+  useEffect(() => {
+    // Initialize confetti instance
+    setJsConfetti(new JSConfetti());
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +58,9 @@ function Login() {
           localStorage.setItem('user', JSON.stringify(data.data.user));
         }
       }
+      
+      // Set flag to trigger confetti on home page
+      localStorage.setItem('showLoginConfetti', 'true');
       
       // Redirect to home page
       navigate('/home');

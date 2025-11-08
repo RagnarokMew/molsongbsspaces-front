@@ -11,12 +11,91 @@ function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      const userData = JSON.parse(userString);
-      setUser(userData);
-      setAvatarUrl(userData.image || null);
-    }
+    console.log('=== Sidebar useEffect running ===');
+    
+    const fetchUserData = async () => {
+      console.log('=== fetchUserData started ===');
+      try {
+        const token = localStorage.getItem('token');
+        const userString = localStorage.getItem('user');
+        
+        console.log('Token exists?', !!token);
+        console.log('User in localStorage:', userString);
+        
+        if (!userString) {
+          console.log('❌ No user in localStorage - STOPPING');
+          return;
+        }
+
+        const localUser = JSON.parse(userString);
+        console.log('Parsed localUser:', localUser);
+        
+        const userId = localUser._id || localUser.id;
+        console.log('User ID:', userId);
+
+        if (!userId) {
+          console.error('❌ No user ID found in localStorage user:', localUser);
+          return;
+        }
+
+        console.log('🔄 Fetching user data from API...');
+
+        // Fetch user data from backend to get the latest profile picture
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+
+        // Add authorization header if token exists
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        console.log('Fetch URL:', `https://molsongbsspaces.onrender.com/api/user/${userId}`);
+        console.log('Headers:', headers);
+
+        const response = await fetch(`https://molsongbsspaces.onrender.com/api/user/${userId}`, {
+          method: 'GET',
+          headers: headers,
+        });
+        
+        console.log('📡 Response received');
+        console.log('Status:', response.status);
+        console.log('OK?:', response.ok);
+        
+        if (!response.ok) {
+          console.error('❌ API response not OK:', response.status, response.statusText);
+          throw new Error(`Failed to fetch user data: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        console.log('✅ Raw response data:', userData);
+        
+        // Check if data is wrapped in a 'data' property (like the login response)
+        const actualUserData = userData.data || userData;
+        console.log('✅ Actual user data:', actualUserData);
+        console.log('✅ Image field:', actualUserData.image);
+        
+        setUser(actualUserData);
+        setAvatarUrl(actualUserData.image);
+
+        // Update localStorage with fresh data
+        localStorage.setItem('user', JSON.stringify(actualUserData));
+        console.log('✅ Updated localStorage');
+      } catch (error) {
+        console.error('❌ Error in fetchUserData:', error);
+        console.error('Error message:', error.message);
+        // Fallback to localStorage data if fetch fails
+        const userString = localStorage.getItem('user');
+        if (userString) {
+          const userData = JSON.parse(userString);
+          console.log('⚠️ Using fallback localStorage data:', userData);
+          setUser(userData);
+          setAvatarUrl(userData.image || null);
+        }
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   // Close mobile menu when route changes
