@@ -67,6 +67,32 @@ const FloorPlanSVG = () => {
       color: "#f472b6", // pink
       hoverColor: "#db2777",
     },
+    // additional bubble rooms
+    "bubble room 5": {
+      color: "#a78bfa", // purple
+      hoverColor: "#7c3aed",
+    },
+    "Bubble Room 6": {
+      color: "#fb7185", // rose
+      hoverColor: "#f43f5e",
+    },
+    // Cubicles
+    "Cubicle 1": {
+      color: "#fbbf24",
+      hoverColor: "#f59e0b",
+    },
+    "Cubicle 2": {
+      color: "#38bdf8",
+      hoverColor: "#0ea5e9",
+    },
+    "Cubicle 3": {
+      color: "#fca5a5",
+      hoverColor: "#f87171",
+    },
+    "Cubicle 4": {
+      color: "#c084fc",
+      hoverColor: "#a78bfa",
+    },
     ManagementOffice3: {
       color: "#f59e0b",
       hoverColor: "#d97706",
@@ -2142,6 +2168,38 @@ const FloorPlanSVG = () => {
               onMouseEnter={() => setHoveredSection("Cubicle 2")}
               onMouseLeave={() => setHoveredSection(null)}
               onClick={() => handleSectionClick("Cubicle 2")}
+            />
+
+            {/* Cubicle 3 - TODO: see if it needs separate hitboxes for chairs*/}
+            <rect
+              x="1604"
+              y="980"
+              width="87"
+              height="48"
+              fill={getSectionColor("Cubicle 3")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Cubicle 3" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Cubicle 3")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Cubicle 3")}
+            />
+
+            {/* Cubicle 4 - TODO: see if it needs separate hitboxes for chairs*/}
+            <rect
+              x="1605"
+              y="155"
+              width="87"
+              height="48"
+              fill={getSectionColor("Cubicle 4")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Cubicle 4" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Cubicle 4")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Cubicle 4")}
             />
 
             {/* */}
