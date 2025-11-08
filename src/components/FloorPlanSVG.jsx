@@ -22,6 +22,7 @@ const FloorPlanSVG = () => {
   // Fetch all desks from backend API
   useEffect(() => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Mock bookings - replace with API call
     const mockBookings = [
       {
@@ -33,6 +34,8 @@ const FloorPlanSVG = () => {
     ];
     setBookings(mockBookings);
 =======
+=======
+>>>>>>> Stashed changes
     const fetchDesks = async () => {
       try {
         setLoadingDesks(true);
@@ -77,6 +80,9 @@ const FloorPlanSVG = () => {
     const refreshInterval = setInterval(fetchDesks, 30000);
     
     return () => clearInterval(refreshInterval);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }, []);
 
