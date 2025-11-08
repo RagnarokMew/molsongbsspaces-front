@@ -14,7 +14,7 @@ function Login() {
     setError('');
 
     try {
-      const response = await fetch('https://molsongbsspaces.onrender.com/auth/Login', {
+      const response = await fetch('https://molsongbsspaces.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ function Login() {
       
       // Redirect or update app state here
       // For example: window.location.href = '/dashboard';
-      window.location.href = '/home';
+      // window.location.href = '/home';
       
     } catch (err) {
       console.error('Login error:', err);
