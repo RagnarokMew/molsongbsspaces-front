@@ -268,7 +268,7 @@ const FloorPlanSVG = () => {
           >
             <defs>
               <clipPath id="beerPointClip">
-                <path d="M227 1030.5H0.5V0.5H227V248H414.5V317.5H619.5V719.5H406V787H227V1030.5Z" />
+                <path d="M229.195 1035.5H0.5V0.5H229.195V249.201H418.513V319.039H625.5V722.99H409.931V790.818H229.195V1035.5Z" />
               </clipPath>
             </defs>
             <g stroke="#000">
@@ -2035,7 +2035,7 @@ const FloorPlanSVG = () => {
 
             {/* Beer Point*/}
             <path
-              d="M227 1030.5H0.5V0.5H227V248H414.5V317.5H619.5V719.5H406V787H227V1030.5Z"
+              d="M229.195 1035.5H0.5V0.5H229.195V249.201H418.513V319.039H625.5V722.99H409.931V790.818H229.195V1035.5Z"
               fill={getSectionColor('beer point')}
               fillOpacity={0.14}
               stroke={hoveredSection === 'Beer Point' ? '#1a1a1a' : 'transparent'}
@@ -2135,7 +2135,71 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("ManagementOffice3")}
             />
 
+            {/* Bubble Room 5*/}
+            <rect
+              x="3097"
+              y="246"
+              width="131"
+              height="91"
+              fill={getSectionColor("bubble room 5")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "bubble room 5" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("bubble room 5")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("bubble room 5")}
+            />
+
             {/* Training Office - Far right middle */}
+            <rect
+              x="2847"
+              y="337"
+              width="381"
+              height="363"
+              fill={getSectionColor("Training Office")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Training Office" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Training Office")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Training Office")}
+            />
+
+            {/* Bookster Area */}
+            <rect
+              x="2694"
+              y="340"
+              width="153"
+              height="239"
+              fill={getSectionColor("Bookster Area")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Bookster Area" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Bookster Area")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Bookster Area")}
+            />
+
+            {/* Bubble Room 6 */}
+            <rect
+              x="2694"
+              y="579"
+              width="153"
+              height="122"
+              fill={getSectionColor("Bubble Room 6")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Bubble Room 6" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Bubble Room 6")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Bubble Room 6")}
+            />
+
+            {/* */}
             <rect
               x="2847"
               y="337"
