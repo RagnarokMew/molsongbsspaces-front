@@ -11,7 +11,10 @@ const FloorPlanSVG = () => {
   const [loadingDesks, setLoadingDesks] = useState(true);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const [currentUser, setCurrentUser] = useState(null); // Store current user data
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -26,6 +29,7 @@ const FloorPlanSVG = () => {
     return () => clearInterval(timer);
   }, []);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
   // Fetch current user data from backend API
@@ -74,6 +78,10 @@ const FloorPlanSVG = () => {
 
   // Fetch all desks from backend API
   useEffect(() => {
+=======
+  // Fetch all desks from backend API
+  useEffect(() => {
+>>>>>>> Stashed changes
 =======
   // Fetch all desks from backend API
   useEffect(() => {
@@ -476,6 +484,7 @@ const FloorPlanSVG = () => {
     // Find the desk in our fetched data
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Backend uses locationId like "A_Table2_M2", we use "Table 2 UP"
     const desk = desks.find(d => {
       // Try exact match first
@@ -527,6 +536,8 @@ const FloorPlanSVG = () => {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
     
     if (!desk) {
@@ -540,6 +551,9 @@ const FloorPlanSVG = () => {
     if (desk.attendances && desk.attendances.length > 0) {
       const hasActiveAttendance = desk.attendances.some(attendance => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -548,6 +562,7 @@ const FloorPlanSVG = () => {
           const attendanceStart = new Date(attendance.start);
           const attendanceEnd = attendance.end ? new Date(attendance.end) : null;
           
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
           console.log(`Parsed start: ${attendanceStart.toISOString()} (${attendanceStart.getTime()})`);
@@ -588,6 +603,8 @@ const FloorPlanSVG = () => {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
           // If there's a start time but no end time, it's currently occupied
           if (!attendanceEnd) {
             return now >= attendanceStart;
@@ -603,6 +620,9 @@ const FloorPlanSVG = () => {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -621,7 +641,10 @@ const FloorPlanSVG = () => {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     console.log(`✅ ${deskId} is AVAILABLE`);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -658,6 +681,7 @@ const FloorPlanSVG = () => {
   const getDeskInfo = (deskId) => {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Use same matching logic as isDeskAvailable
     const desk = desks.find(d => {
       // Try exact match first
@@ -692,6 +716,11 @@ const FloorPlanSVG = () => {
     
     if (!desk) {
 >>>>>>> Stashed changes
+=======
+    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    
+    if (!desk) {
+>>>>>>> Stashed changes
       return {
         name: deskId,
         status: 'Unknown',
@@ -703,8 +732,11 @@ const FloorPlanSVG = () => {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     console.log(`📊 getDeskInfo for ${deskId}:`, desk);
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
