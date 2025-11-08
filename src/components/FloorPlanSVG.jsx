@@ -96,10 +96,6 @@ const FloorPlanSVG = () => {
       color: "#06b6d4",
       hoverColor: "#0891b2",
     },
-    "Training Office": {
-      color: "#14b8a6",
-      hoverColor: "#0d9488",
-    },
     "Work Tables UP": {
       color: "#f97316",
       hoverColor: "#ea580c",
