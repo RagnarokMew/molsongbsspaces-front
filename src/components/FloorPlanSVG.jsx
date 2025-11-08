@@ -41,29 +41,29 @@ const FloorPlanSVG = () => {
       color: "#8b5cf6",
       hoverColor: "#7c3aed",
     },
-    // individual bubble rooms - give each a distinct color
-    "bubble room 1": {
+    // individual Bubble rooms - give each a distinct color
+    "Bubble Room1": {
       color: "#60a5fa", // blue
       hoverColor: "#2563eb",
     },
-    "bubble room 2": {
+    "Bubble Room2": {
       color: "#34d399", // green
       hoverColor: "#059669",
     },
-    "bubble room 3": {
+    "Bubble Room3": {
       color: "#f97316", // orange
       hoverColor: "#ea580c",
     },
-    "bubble room 4": {
+    "Bubble Room4": {
       color: "#f472b6", // pink
       hoverColor: "#db2777",
     },
-    // additional bubble rooms
-    "bubble room 5": {
+    // additional Bubble rooms
+    "Bubble Room5": {
       color: "#a78bfa", // purple
       hoverColor: "#7c3aed",
     },
-    "Bubble Room 6": {
+    "Bubble Room6": {
       color: "#fb7185", // rose
       hoverColor: "#f43f5e",
     },
@@ -2233,68 +2233,68 @@ const FloorPlanSVG = () => {
             >
             </g>
 
-            {/* Bubble Room 1*/}
+            {/* Bubble Room1*/}
             <rect
               x="234"
               y="2"
               width="110"
               height="125" // 250
-              fill={getSectionColor("bubble room 1")}
+              fill={getSectionColor("Bubble Room1")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "bubble room 1" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("bubble room 1")}
+              onMouseEnter={() => setHoveredSection("Bubble Room1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("bubble room 1")}
+              onClick={() => handleSectionClick("Bubble Room1")}
             />
 
-            {/* Bubble Room 2*/}
+            {/* Bubble Room2*/}
             <rect
               x="234"
               y="127"
               width="110"
               height="125" // 250
-              fill={getSectionColor("bubble room 2")}
+              fill={getSectionColor("Bubble Room2")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "bubble room 2" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room2" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("bubble room 2")}
+              onMouseEnter={() => setHoveredSection("Bubble Room2")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("bubble room 2")}
+              onClick={() => handleSectionClick("Bubble Room2")}
             />
 
-            {/* Bubble Room 3*/}
+            {/* Bubble Room3*/}
             <rect
               x="234"
               y="789"
               width="110"
               height="123"
-              fill={getSectionColor("bubble room 3")}
+              fill={getSectionColor("Bubble Room3")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "bubble room 3" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room3" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("bubble room 3")}
+              onMouseEnter={() => setHoveredSection("Bubble Room3")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("bubble room 3")}
+              onClick={() => handleSectionClick("Bubble Room3")}
             />
 
-            {/* Bubble Room 4*/}
+            {/* Bubble Room4*/}
             <rect
               x="234"
               y="912" 
               width="110"
               height="123"
-              fill={getSectionColor("bubble room 4")}
+              fill={getSectionColor("Bubble Room4")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "bubble room 4" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room4" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("bubble room 4")}
+              onMouseEnter={() => setHoveredSection("Bubble Room4")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("bubble room 4")}
+              onClick={() => handleSectionClick("Bubble Room4")}
             />
 
             {/* Management Office 3 - Far right top */}
@@ -2313,20 +2313,20 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("ManagementOffice3")}
             />
 
-            {/* Bubble Room 5*/}
+            {/* Bubble Room5*/}
             <rect
               x="3097"
               y="246"
               width="131"
               height="91"
-              fill={getSectionColor("bubble room 5")}
+              fill={getSectionColor("Bubble Room5")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "bubble room 5" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room5" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("bubble room 5")}
+              onMouseEnter={() => setHoveredSection("Bubble Room5")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("bubble room 5")}
+              onClick={() => handleSectionClick("Bubble Room5")}
             />
 
             {/* Training Office - Far right middle */}
@@ -2361,20 +2361,20 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Bookster Area")}
             />
 
-            {/* Bubble Room 6 */}
+            {/* Bubble Room6 */}
             <rect
               x="2694"
               y="579"
               width="153"
               height="122"
-              fill={getSectionColor("Bubble Room 6")}
+              fill={getSectionColor("Bubble Room6")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "Bubble Room 6" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Bubble Room6" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Bubble Room 6")}
+              onMouseEnter={() => setHoveredSection("Bubble Room6")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room 6")}
+              onClick={() => handleSectionClick("Bubble Room6")}
             />
 
             {/* Cubicle 1 - TODO: see if it needs separate hitboxes for chairs*/}
