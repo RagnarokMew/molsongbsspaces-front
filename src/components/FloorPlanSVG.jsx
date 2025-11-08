@@ -22,12 +22,6 @@ const FloorPlanSVG = () => {
     // Mock bookings - replace with API call
     const mockBookings = [
       {
-        section: "Center",
-        date: "2025-11-08",
-        startTime: "09:00",
-        endTime: "12:00",
-      },
-      {
         section: "Work Tables UP",
         date: "2025-11-08",
         startTime: "14:00",
@@ -42,10 +36,6 @@ const FloorPlanSVG = () => {
     "Bookster Area": {
       color: "#10b981",
       hoverColor: "#059669",
-    },
-    Center: {
-      color: "#3b82f6",
-      hoverColor: "#2563eb",
     },
     "Bubble Rooms": {
       color: "#8b5cf6",
@@ -2201,23 +2191,6 @@ const FloorPlanSVG = () => {
                 onClick={() => handleSectionClick(table.id)}
               />
             ))}
-
-
-            {/* Center - Middle section */}
-            <rect
-              x="689"
-              y="315"
-              width="1937"
-              height="404"
-              fill={getSectionColor("Center")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Center" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Center")}
-              onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Center")}
-            />
 
             {/* Work Tables DOWN */}
             {tableDownData.map(table => (
