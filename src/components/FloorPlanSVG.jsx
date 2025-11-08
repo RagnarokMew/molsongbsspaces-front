@@ -121,259 +121,259 @@ const FloorPlanSVG = () => {
 
   // UP Tables (Cannot be automated because offsets aren't consistent :( )
   const tableUpData = [
-    { id: 'Table 1 UP', x: 516, y: 88, width: 44, height: 49 },
-    { id: 'Table 2 UP', x: 516, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 3 UP', x: 516, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 4 UP', x: 516 + 44, y: 88, width: 44, height: 49 },
-    { id: 'Table 5 UP', x: 516 + 44, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 6 UP', x: 516 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table1.M1', x: 516, y: 88, width: 44, height: 49 },
+    { id: 'A_Table1.M2', x: 516, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table1.M3', x: 516, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table1.M4', x: 516 + 44, y: 88, width: 44, height: 49 },
+    { id: 'A_Table1.M5', x: 516 + 44, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table1.M6', x: 516 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 7 UP', x: 516 + 88 + 43, y: 88, width: 44, height: 49 },
-    { id: 'Table 8 UP', x: 516 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 9 UP', x: 516 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 10 UP', x: 516 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
-    { id: 'Table 11 UP', x: 516 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 12 UP', x: 516 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table2.M1', x: 516 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'A_Table2.M2', x: 516 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table2.M3', x: 516 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table2.M4', x: 516 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'A_Table2.M5', x: 516 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table2.M6', x: 516 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 13 UP', x: 516 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
-    { id: 'Table 14 UP', x: 516 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 15 UP', x: 516 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 16 UP', x: 516 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
-    { id: 'Table 17 UP', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 18 UP', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table3.M1', x: 516 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'A_Table3.M2', x: 516 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table3.M3', x: 516 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table3.M4', x: 516 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'A_Table3.M5', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table3.M6', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 19 UP', x: 516 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
-    { id: 'Table 20 UP', x: 516 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 21 UP', x: 516 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 22 UP', x: 516 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
-    { id: 'Table 23 UP', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 24 UP', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table4.M1', x: 516 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'A_Table4.M2', x: 516 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table4.M3', x: 516 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table4.M4', x: 516 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'A_Table4.M5', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table4.M6', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 25 UP', x: 516 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
-    { id: 'Table 26 UP', x: 516 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 27 UP', x: 516 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 28 UP', x: 516 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
-    { id: 'Table 29 UP', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 30 UP', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table5.M1', x: 516 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'A_Table5.M2', x: 516 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table5.M3', x: 516 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table5.M4', x: 516 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'A_Table5.M5', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table5.M6', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 31 UP', x: 516 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
-    { id: 'Table 32 UP', x: 516 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 33 UP', x: 516 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 34 UP', x: 516 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
-    { id: 'Table 35 UP', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 36 UP', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table6.M1', x: 516 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'A_Table6.M2', x: 516 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table6.M3', x: 516 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table6.M4', x: 516 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'A_Table6.M5', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table6.M6', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 37 UP', x: 516 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
-    { id: 'Table 38 UP', x: 516 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 39 UP', x: 516 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 40 UP', x: 516 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
-    { id: 'Table 41 UP', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 42 UP', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table7.M1', x: 516 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'A_Table7.M2', x: 516 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table7.M3', x: 516 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table7.M4', x: 516 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'A_Table7.M5', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table7.M6', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 43 UP', x: 516 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
-    { id: 'Table 44 UP', x: 516 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 45 UP', x: 516 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 46 UP', x: 516 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
-    { id: 'Table 47 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 48 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table8.M1', x: 516 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'A_Table8.M2', x: 516 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table8.M3', x: 516 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table8.M4', x: 516 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'A_Table8.M5', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table8.M6', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 49 UP', x: 1748, y: 88, width: 44, height: 49 },
-    { id: 'Table 50 UP', x: 1748, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 51 UP', x: 1748, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 52 UP', x: 1748 + 44, y: 88, width: 44, height: 49 },
-    { id: 'Table 53 UP', x: 1748 + 44, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 54 UP', x: 1748 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table9.M1', x: 1748, y: 88, width: 44, height: 49 },
+    { id: 'A_Table9.M2', x: 1748, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table9.M3', x: 1748, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table9.M4', x: 1748 + 44, y: 88, width: 44, height: 49 },
+    { id: 'A_Table9.M5', x: 1748 + 44, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table9.M6', x: 1748 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 55 UP', x: 1748 + 88 + 43, y: 88, width: 44, height: 49 },
-    { id: 'Table 56 UP', x: 1748 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 57 UP', x: 1748 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 58 UP', x: 1748 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
-    { id: 'Table 59 UP', x: 1748 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 60 UP', x: 1748 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table10.M1', x: 1748 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'A_Table10.M2', x: 1748 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table10.M3', x: 1748 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table10.M4', x: 1748 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'A_Table10.M5', x: 1748 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table10.M6', x: 1748 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 61 UP', x: 1748 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
-    { id: 'Table 62 UP', x: 1748 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 63 UP', x: 1748 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 64 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
-    { id: 'Table 65 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 66 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table11.M1', x: 1748 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'A_Table11.M2', x: 1748 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table11.M3', x: 1748 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table11.M4', x: 1748 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'A_Table11.M5', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table11.M6', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 67 UP', x: 1748 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
-    { id: 'Table 68 UP', x: 1748 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 69 UP', x: 1748 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 70 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
-    { id: 'Table 71 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 72 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table12.M1', x: 1748 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'A_Table12.M2', x: 1748 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table12.M3', x: 1748 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table12.M4', x: 1748 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'A_Table12.M5', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table12.M6', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 73 UP', x: 1748 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
-    { id: 'Table 74 UP', x: 1748 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 75 UP', x: 1748 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 76 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
-    { id: 'Table 77 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 78 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table13.M1', x: 1748 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'A_Table13.M2', x: 1748 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table13.M3', x: 1748 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table13.M4', x: 1748 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'A_Table13.M5', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table13.M6', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 79 UP', x: 1748 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
-    { id: 'Table 80 UP', x: 1748 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 81 UP', x: 1748 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 82 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
-    { id: 'Table 83 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 84 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table14.M1', x: 1748 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'A_Table14.M2', x: 1748 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table14.M3', x: 1748 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table14.M4', x: 1748 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'A_Table14.M5', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table14.M6', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 85 UP', x: 1748 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
-    { id: 'Table 86 UP', x: 1748 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 87 UP', x: 1748 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 88 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
-    { id: 'Table 89 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 90 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table15.M1', x: 1748 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'A_Table15.M2', x: 1748 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table15.M3', x: 1748 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table15.M4', x: 1748 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'A_Table15.M5', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table15.M6', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 91 UP', x: 1748 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
-    { id: 'Table 92 UP', x: 1748 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 93 UP', x: 1748 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 94 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
-    { id: 'Table 95 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 96 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table16.M1', x: 1748 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'A_Table16.M2', x: 1748 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table16.M3', x: 1748 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table16.M4', x: 1748 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'A_Table16.M5', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table16.M6', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 97 UP', x: 1748 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
-    { id: 'Table 98 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 99 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 100 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
-    { id: 'Table 101 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 102 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table17.M1', x: 1748 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'A_Table17.M2', x: 1748 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table17.M3', x: 1748 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table17.M4', x: 1748 + 44 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'A_Table17.M5', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table17.M6', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 103 UP', x: 1748 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
-    { id: 'Table 104 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 105 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 106 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
-    { id: 'Table 107 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
-    { id: 'Table 108 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table18.M1', x: 1748 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
+    { id: 'A_Table18.M2', x: 1748 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table18.M3', x: 1748 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'A_Table18.M4', x: 1748 + 44 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
+    { id: 'A_Table18.M5', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
+    { id: 'A_Table18.M6', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
   ];
 
   const tableDownData = [
-    { id: 'Table 1 DOWN', x: 516, y: 798, width: 44, height: 49 },
-    { id: 'Table 2 DOWN', x: 516, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 3 DOWN', x: 516, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 4 DOWN', x: 516 + 44, y: 798, width: 44, height: 49 },
-    { id: 'Table 5 DOWN', x: 516 + 44, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 6 DOWN', x: 516 + 44, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table1.M1', x: 516, y: 798, width: 44, height: 49 },
+    { id: 'B_Table1.M2', x: 516, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table1.M3', x: 516, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table1.M4', x: 516 + 44, y: 798, width: 44, height: 49 },
+    { id: 'B_Table1.M5', x: 516 + 44, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table1.M6', x: 516 + 44, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 7 DOWN', x: 516 + 88 + 43, y: 798, width: 44, height: 49 },
-    { id: 'Table 8 DOWN', x: 516 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 9 DOWN', x: 516 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 10 DOWN', x: 516 + 44 + 88 + 43, y: 798, width: 44, height: 49 },
-    { id: 'Table 11 DOWN', x: 516 + 44 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 12 DOWN', x: 516 + 44 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table2.M1', x: 516 + 88 + 43, y: 798, width: 44, height: 49 },
+    { id: 'B_Table2.M2', x: 516 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table2.M3', x: 516 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table2.M4', x: 516 + 44 + 88 + 43, y: 798, width: 44, height: 49 },
+    { id: 'B_Table2.M5', x: 516 + 44 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table2.M6', x: 516 + 44 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 13 DOWN', x: 516 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
-    { id: 'Table 14 DOWN', x: 516 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 15 DOWN', x: 516 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 16 DOWN', x: 516 + 44 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
-    { id: 'Table 17 DOWN', x: 516 + 44 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 18 DOWN', x: 516 + 44 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table3.M1', x: 516 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
+    { id: 'B_Table3.M2', x: 516 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table3.M3', x: 516 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table3.M4', x: 516 + 44 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
+    { id: 'B_Table3.M5', x: 516 + 44 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table3.M6', x: 516 + 44 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 19 DOWN', x: 516 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
-    { id: 'Table 20 DOWN', x: 516 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 21 DOWN', x: 516 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 22 DOWN', x: 516 + 44 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
-    { id: 'Table 23 DOWN', x: 516 + 44 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 24 DOWN', x: 516 + 44 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table4.M1', x: 516 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
+    { id: 'B_Table4.M2', x: 516 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table4.M3', x: 516 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table4.M4', x: 516 + 44 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
+    { id: 'B_Table4.M5', x: 516 + 44 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table4.M6', x: 516 + 44 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 25 DOWN', x: 516 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
-    { id: 'Table 26 DOWN', x: 516 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 27 DOWN', x: 516 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 28 DOWN', x: 516 + 44 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
-    { id: 'Table 29 DOWN', x: 516 + 44 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 30 DOWN', x: 516 + 44 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table5.M1', x: 516 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
+    { id: 'B_Table5.M2', x: 516 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table5.M3', x: 516 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table5.M4', x: 516 + 44 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
+    { id: 'B_Table5.M5', x: 516 + 44 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table5.M6', x: 516 + 44 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 31 DOWN', x: 516 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
-    { id: 'Table 32 DOWN', x: 516 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 33 DOWN', x: 516 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 34 DOWN', x: 516 + 44 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
-    { id: 'Table 35 DOWN', x: 516 + 44 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 36 DOWN', x: 516 + 44 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table6.M1', x: 516 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
+    { id: 'B_Table6.M2', x: 516 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table6.M3', x: 516 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table6.M4', x: 516 + 44 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
+    { id: 'B_Table6.M5', x: 516 + 44 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table6.M6', x: 516 + 44 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 37 DOWN', x: 516 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
-    { id: 'Table 38 DOWN', x: 516 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 39 DOWN', x: 516 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 40 DOWN', x: 516 + 44 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
-    { id: 'Table 41 DOWN', x: 516 + 44 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 42 DOWN', x: 516 + 44 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table7.M1', x: 516 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
+    { id: 'B_Table7.M2', x: 516 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table7.M3', x: 516 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table7.M4', x: 516 + 44 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
+    { id: 'B_Table7.M5', x: 516 + 44 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table7.M6', x: 516 + 44 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 43 DOWN', x: 516 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
-    { id: 'Table 44 DOWN', x: 516 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 45 DOWN', x: 516 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 46 DOWN', x: 516 + 44 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
-    { id: 'Table 47 DOWN', x: 516 + 44 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 48 DOWN', x: 516 + 44 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table8.M1', x: 516 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
+    { id: 'B_Table8.M2', x: 516 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table8.M3', x: 516 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table8.M4', x: 516 + 44 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
+    { id: 'B_Table8.M5', x: 516 + 44 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table8.M6', x: 516 + 44 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 49 DOWN', x: 1748, y: 798, width: 44, height: 49 },
-    { id: 'Table 50 DOWN', x: 1748, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 51 DOWN', x: 1748, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 52 DOWN', x: 1748 + 44, y: 798, width: 44, height: 49 },
-    { id: 'Table 53 DOWN', x: 1748 + 44, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 54 DOWN', x: 1748 + 44, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table9.M1', x: 1748, y: 798, width: 44, height: 49 },
+    { id: 'B_Table9.M2', x: 1748, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table9.M3', x: 1748, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table9.M4', x: 1748 + 44, y: 798, width: 44, height: 49 },
+    { id: 'B_Table9.M5', x: 1748 + 44, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table9.M6', x: 1748 + 44, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 55 DOWN', x: 1748 + 88 + 43, y: 798, width: 44, height: 49 },
-    { id: 'Table 56 DOWN', x: 1748 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 57 DOWN', x: 1748 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 58 DOWN', x: 1748 + 44 + 88 + 43, y: 798, width: 44, height: 49 },
-    { id: 'Table 59 DOWN', x: 1748 + 44 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 60 DOWN', x: 1748 + 44 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table10.M1', x: 1748 + 88 + 43, y: 798, width: 44, height: 49 },
+    { id: 'B_Table10.M2', x: 1748 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table10.M3', x: 1748 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table10.M4', x: 1748 + 44 + 88 + 43, y: 798, width: 44, height: 49 },
+    { id: 'B_Table10.M5', x: 1748 + 44 + 88 + 43, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table10.M6', x: 1748 + 44 + 88 + 43, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 61 DOWN', x: 1748 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
-    { id: 'Table 62 DOWN', x: 1748 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 63 DOWN', x: 1748 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 64 DOWN', x: 1748 + 44 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
-    { id: 'Table 65 DOWN', x: 1748 + 44 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 66 DOWN', x: 1748 + 44 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table11.M1', x: 1748 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
+    { id: 'B_Table11.M2', x: 1748 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table11.M3', x: 1748 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table11.M4', x: 1748 + 44 + 88 * 2 + 95, y: 798, width: 44, height: 49 },
+    { id: 'B_Table11.M5', x: 1748 + 44 + 88 * 2 + 95, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table11.M6', x: 1748 + 44 + 88 * 2 + 95, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 67 DOWN', x: 1748 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
-    { id: 'Table 68 DOWN', x: 1748 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 69 DOWN', x: 1748 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 70 DOWN', x: 1748 + 44 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
-    { id: 'Table 71 DOWN', x: 1748 + 44 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 72 DOWN', x: 1748 + 44 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table12.M1', x: 1748 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
+    { id: 'B_Table12.M2', x: 1748 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table12.M3', x: 1748 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table12.M4', x: 1748 + 44 + 88 * 3 + 137, y: 798, width: 44, height: 49 },
+    { id: 'B_Table12.M5', x: 1748 + 44 + 88 * 3 + 137, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table12.M6', x: 1748 + 44 + 88 * 3 + 137, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 73 DOWN', x: 1748 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
-    { id: 'Table 74 DOWN', x: 1748 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 75 DOWN', x: 1748 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 76 DOWN', x: 1748 + 44 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
-    { id: 'Table 77 DOWN', x: 1748 + 44 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 78 DOWN', x: 1748 + 44 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table13.M1', x: 1748 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
+    { id: 'B_Table13.M2', x: 1748 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table13.M3', x: 1748 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table13.M4', x: 1748 + 44 + 88 * 4 + 189, y: 798, width: 44, height: 49 },
+    { id: 'B_Table13.M5', x: 1748 + 44 + 88 * 4 + 189, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table13.M6', x: 1748 + 44 + 88 * 4 + 189, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 79 DOWN', x: 1748 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
-    { id: 'Table 80 DOWN', x: 1748 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 81 DOWN', x: 1748 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 82 DOWN', x: 1748 + 44 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
-    { id: 'Table 83 DOWN', x: 1748 + 44 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 84 DOWN', x: 1748 + 44 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table14.M1', x: 1748 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
+    { id: 'B_Table14.M2', x: 1748 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table14.M3', x: 1748 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table14.M4', x: 1748 + 44 + 88 * 5 + 231, y: 798, width: 44, height: 49 },
+    { id: 'B_Table14.M5', x: 1748 + 44 + 88 * 5 + 231, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table14.M6', x: 1748 + 44 + 88 * 5 + 231, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 85 DOWN', x: 1748 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
-    { id: 'Table 86 DOWN', x: 1748 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 87 DOWN', x: 1748 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 88 DOWN', x: 1748 + 44 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
-    { id: 'Table 89 DOWN', x: 1748 + 44 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 90 DOWN', x: 1748 + 44 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table15.M1', x: 1748 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
+    { id: 'B_Table15.M2', x: 1748 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table15.M3', x: 1748 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table15.M4', x: 1748 + 44 + 88 * 6 + 283, y: 798, width: 44, height: 49 },
+    { id: 'B_Table15.M5', x: 1748 + 44 + 88 * 6 + 283, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table15.M6', x: 1748 + 44 + 88 * 6 + 283, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 91 DOWN', x: 1748 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
-    { id: 'Table 92 DOWN', x: 1748 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 93 DOWN', x: 1748 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 94 DOWN', x: 1748 + 44 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
-    { id: 'Table 95 DOWN', x: 1748 + 44 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 96 DOWN', x: 1748 + 44 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table16.M1', x: 1748 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
+    { id: 'B_Table16.M2', x: 1748 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table16.M3', x: 1748 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table16.M4', x: 1748 + 44 + 88 * 7 + 325, y: 798, width: 44, height: 49 },
+    { id: 'B_Table16.M5', x: 1748 + 44 + 88 * 7 + 325, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table16.M6', x: 1748 + 44 + 88 * 7 + 325, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 97 DOWN', x: 1748 + 88 * 8 + 377, y: 798, width: 44, height: 49 },
-    { id: 'Table 98 DOWN', x: 1748 + 88 * 8 + 377, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 99 DOWN', x: 1748 + 88 * 8 + 377, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 100 DOWN', x: 1748 + 44 + 88 * 8 + 377, y: 798, width: 44, height: 49 },
-    { id: 'Table 101 DOWN', x: 1748 + 44 + 88 * 8 + 377, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 102 DOWN', x: 1748 + 44 + 88 * 8 + 377, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table17.M1', x: 1748 + 88 * 8 + 377, y: 798, width: 44, height: 49 },
+    { id: 'B_Table17.M2', x: 1748 + 88 * 8 + 377, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table17.M3', x: 1748 + 88 * 8 + 377, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table17.M4', x: 1748 + 44 + 88 * 8 + 377, y: 798, width: 44, height: 49 },
+    { id: 'B_Table17.M5', x: 1748 + 44 + 88 * 8 + 377, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table17.M6', x: 1748 + 44 + 88 * 8 + 377, y: 798 + 49 * 2, width: 44, height: 49 },
 
-    { id: 'Table 103 DOWN', x: 1748 + 88 * 9 + 416, y: 798, width: 44, height: 49 },
-    { id: 'Table 104 DOWN', x: 1748 + 88 * 9 + 416, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 105 DOWN', x: 1748 + 88 * 9 + 416, y: 798 + 49 * 2, width: 44, height: 49 },
-    { id: 'Table 106 DOWN', x: 1748 + 44 + 88 * 9 + 416, y: 798, width: 44, height: 49 },
-    { id: 'Table 107 DOWN', x: 1748 + 44 + 88 * 9 + 416, y: 798 + 49, width: 44, height: 49 },
-    { id: 'Table 108 DOWN', x: 1748 + 44 + 88 * 9 + 416, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table18.M1', x: 1748 + 88 * 9 + 416, y: 798, width: 44, height: 49 },
+    { id: 'B_Table18.M2', x: 1748 + 88 * 9 + 416, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table18.M3', x: 1748 + 88 * 9 + 416, y: 798 + 49 * 2, width: 44, height: 49 },
+    { id: 'B_Table18.M4', x: 1748 + 44 + 88 * 9 + 416, y: 798, width: 44, height: 49 },
+    { id: 'B_Table18.M5', x: 1748 + 44 + 88 * 9 + 416, y: 798 + 49, width: 44, height: 49 },
+    { id: 'B_Table18.M6', x: 1748 + 44 + 88 * 9 + 416, y: 798 + 49 * 2, width: 44, height: 49 },
   ];
 
   const isAvailable = (sectionName) => {
@@ -2329,20 +2329,36 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Bubble Room5")}
             />
 
-            {/* Training Office - Far right middle */}
+            {/* Training Office 1 - Far right middle */}
             <rect
               x="2847"
               y="337"
-              width="381"
+              width="190"
               height="363"
-              fill={getSectionColor("Training Office")}
+              fill={getSectionColor("Training Office 1")}
               fillOpacity="0.3"
-              stroke={hoveredSection === "Training Office" ? "#1a1a1a" : "transparent"}
+              stroke={hoveredSection === "Training Office 1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Training Office")}
+              onMouseEnter={() => setHoveredSection("Training Office 1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Training Office")}
+              onClick={() => handleSectionClick("Training Office 1")}
+            />
+
+            {/* Training Office 2 - Far right middle */}
+            <rect
+              x="3037"
+              y="337"
+              width="190"
+              height="363"
+              fill={getSectionColor("Training Office 2")}
+              fillOpacity="0.3"
+              stroke={hoveredSection === "Training Office 2" ? "#1a1a1a" : "transparent"}
+              strokeWidth="3"
+              style={{ cursor: "pointer", transition: "all 0.2s" }}
+              onMouseEnter={() => setHoveredSection("Training Office 2")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick("Training Office 2")}
             />
 
             {/* Bookster Area */}
@@ -2439,22 +2455,6 @@ const FloorPlanSVG = () => {
               onMouseEnter={() => setHoveredSection("Cubicle 4")}
               onMouseLeave={() => setHoveredSection(null)}
               onClick={() => handleSectionClick("Cubicle 4")}
-            />
-
-            {/* */}
-            <rect
-              x="2847"
-              y="337"
-              width="381"
-              height="363"
-              fill={getSectionColor("Training Office")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Training Office" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Training Office")}
-              onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Training Office")}
             />
 
             {/* Management Office 2 - Far right middle bottom */}
