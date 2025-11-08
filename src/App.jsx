@@ -1,12 +1,8 @@
-function App() {
+import Login from './components/Login';
 
-  return (
-    <>
-      <h1 className="text-3xl font-bold underline text-molson-blue">
-        Hello world!
-      </h1>
-    </>
-  )
+function App() {
+  return <Login />;
 }
 
-export default App
+export default App;
+
