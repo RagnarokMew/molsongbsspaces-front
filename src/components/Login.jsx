@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../index.css';
 
 function Login() {
@@ -7,6 +8,7 @@ function Login() {
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,18 +38,22 @@ function Login() {
       const data = await response.json();
       console.log('Response data:', data);
 
-      if (!response.ok) {
+      if (!response.ok || !data.success) {
         throw new Error(data.message || 'Login failed');
       }
 
       console.log('Login successful:', data);
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+      // Token is in data.data.token based on API response
+      if (data.data && data.data.token) {
+        localStorage.setItem('token', data.data.token);
+        // Optionally store user info
+        if (data.data.user) {
+          localStorage.setItem('user', JSON.stringify(data.data.user));
+        }
       }
       
-      // Redirect or update app state here
-      // For example: window.location.href = '/dashboard';
-      // window.location.href = '/home';
+      // Redirect to home page
+      navigate('/home');
       
     } catch (err) {
       console.error('Login error:', err);
