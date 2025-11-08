@@ -9,7 +9,10 @@ const FloorPlanSVG = () => {
   const [bookings, setBookings] = useState([]);
   const [desks, setDesks] = useState([]); // Store all desk data
   const [loadingDesks, setLoadingDesks] = useState(true);
+<<<<<<< Updated upstream
   const [currentUser, setCurrentUser] = useState(null); // Store current user data
+=======
+>>>>>>> Stashed changes
 
   // Update current time every second for real-time updates
   useEffect(() => {
@@ -20,6 +23,7 @@ const FloorPlanSVG = () => {
     return () => clearInterval(timer);
   }, []);
 
+<<<<<<< Updated upstream
   // Fetch current user data from backend API
   useEffect(() => {
     const fetchUserData = async () => {
@@ -66,6 +70,10 @@ const FloorPlanSVG = () => {
 
   // Fetch all desks from backend API
   useEffect(() => {
+=======
+  // Fetch all desks from backend API
+  useEffect(() => {
+>>>>>>> Stashed changes
     const fetchDesks = async () => {
       try {
         setLoadingDesks(true);
@@ -458,6 +466,7 @@ const FloorPlanSVG = () => {
     if (loadingDesks) return true; // Show as available while loading
     
     // Find the desk in our fetched data
+<<<<<<< Updated upstream
     // Backend uses locationId like "A_Table2_M2", we use "Table 2 UP"
     const desk = desks.find(d => {
       // Try exact match first
@@ -506,11 +515,26 @@ const FloorPlanSVG = () => {
         console.log(`Raw start: ${attendance.start}`);
         console.log(`Raw end: ${attendance.end}`);
         
+=======
+    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    
+    if (!desk) {
+      // Desk not found in backend, assume available
+      return true;
+    }
+
+    const now = new Date();
+    
+    // Check attendances (primary - current format from backend)
+    if (desk.attendances && desk.attendances.length > 0) {
+      const hasActiveAttendance = desk.attendances.some(attendance => {
+>>>>>>> Stashed changes
         // Check if attendance is pending or active
         if (attendance.status === 'pending' || attendance.status === 'active') {
           const attendanceStart = new Date(attendance.start);
           const attendanceEnd = attendance.end ? new Date(attendance.end) : null;
           
+<<<<<<< Updated upstream
           console.log(`Parsed start: ${attendanceStart.toISOString()} (${attendanceStart.getTime()})`);
           console.log(`Parsed end: ${attendanceEnd ? attendanceEnd.toISOString() + ' (' + attendanceEnd.getTime() + ')' : 'null'}`);
           console.log(`Current: ${now.toISOString()} (${now.getTime()})`);
@@ -546,6 +570,22 @@ const FloorPlanSVG = () => {
       }
     }
     
+=======
+          // If there's a start time but no end time, it's currently occupied
+          if (!attendanceEnd) {
+            return now >= attendanceStart;
+          }
+          
+          // Check if current time is within attendance period
+          return now >= attendanceStart && now <= attendanceEnd;
+        }
+        return false;
+      });
+      
+      if (hasActiveAttendance) return false; // Occupied
+    }
+
+>>>>>>> Stashed changes
     // Check bookings (fallback - legacy format)
     if (desk.bookings && desk.bookings.length > 0) {
       const hasActiveBooking = desk.bookings.some(booking => {
@@ -559,7 +599,10 @@ const FloorPlanSVG = () => {
       if (hasActiveBooking) return false; // Booked
     }
 
+<<<<<<< Updated upstream
     console.log(`✅ ${deskId} is AVAILABLE`);
+=======
+>>>>>>> Stashed changes
     return true; // Available if no active attendance or booking
   };
 
@@ -590,6 +633,7 @@ const FloorPlanSVG = () => {
 
   // Get detailed booking information for a desk
   const getDeskInfo = (deskId) => {
+<<<<<<< Updated upstream
     // Use same matching logic as isDeskAvailable
     const desk = desks.find(d => {
       // Try exact match first
@@ -614,6 +658,11 @@ const FloorPlanSVG = () => {
     
     if (!desk) {
       console.log(`⚠️ getDeskInfo: Desk not found for ${deskId}`);
+=======
+    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    
+    if (!desk) {
+>>>>>>> Stashed changes
       return {
         name: deskId,
         status: 'Unknown',
@@ -623,8 +672,11 @@ const FloorPlanSVG = () => {
       };
     }
 
+<<<<<<< Updated upstream
     console.log(`📊 getDeskInfo for ${deskId}:`, desk);
 
+=======
+>>>>>>> Stashed changes
     const now = new Date();
     let currentBooking = null;
     let nextBooking = null;
