@@ -186,6 +186,83 @@ const FloorPlanSVG = () => {
     { id: 'Table 46 UP', x: 516 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
     { id: 'Table 47 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
     { id: 'Table 48 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 49 UP', x: 1748, y: 88, width: 44, height: 49 },
+    { id: 'Table 50 UP', x: 1748, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 51 UP', x: 1748, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 52 UP', x: 1748 + 44, y: 88, width: 44, height: 49 },
+    { id: 'Table 53 UP', x: 1748 + 44, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 54 UP', x: 1748 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 55 UP', x: 1748 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'Table 56 UP', x: 1748 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 57 UP', x: 1748 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 58 UP', x: 1748 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'Table 59 UP', x: 1748 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 60 UP', x: 1748 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 61 UP', x: 1748 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'Table 62 UP', x: 1748 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 63 UP', x: 1748 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 64 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'Table 65 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 66 UP', x: 1748 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 67 UP', x: 1748 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'Table 68 UP', x: 1748 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 69 UP', x: 1748 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 70 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'Table 71 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 72 UP', x: 1748 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 73 UP', x: 1748 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'Table 74 UP', x: 1748 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 75 UP', x: 1748 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 76 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'Table 77 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 78 UP', x: 1748 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 79 UP', x: 1748 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'Table 80 UP', x: 1748 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 81 UP', x: 1748 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 82 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'Table 83 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 84 UP', x: 1748 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 85 UP', x: 1748 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'Table 86 UP', x: 1748 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 87 UP', x: 1748 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 88 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'Table 89 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 90 UP', x: 1748 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 91 UP', x: 1748 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'Table 92 UP', x: 1748 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 93 UP', x: 1748 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 94 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'Table 95 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 96 UP', x: 1748 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 97 UP', x: 1748 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'Table 98 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 99 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 100 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'Table 101 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 102 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 97 UP', x: 1748 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'Table 98 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 99 UP', x: 1748 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 100 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88, width: 44, height: 49 },
+    { id: 'Table 101 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 102 UP', x: 1748 + 44 + 88 * 8 + 377, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 103 UP', x: 1748 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
+    { id: 'Table 104 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 105 UP', x: 1748 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 106 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88, width: 44, height: 49 },
+    { id: 'Table 107 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 108 UP', x: 1748 + 44 + 88 * 9 + 416, y: 88 + 49 * 2, width: 44, height: 49 },
   ];
 
   const isAvailable = (sectionName) => {
@@ -2004,20 +2081,6 @@ const FloorPlanSVG = () => {
               />
             ))}
 
-            <rect
-              x="1748"
-              y="88"
-              width="1297"
-              height="147"
-              fill={getSectionColor("Work Tables UP")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Work Tables UP" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Work Tables UP")}
-              onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Work Tables UP")}
-            />
 
             {/* Center - Middle section */}
             <rect
