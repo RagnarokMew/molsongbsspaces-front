@@ -50,6 +50,23 @@ const FloorPlanSVG = () => {
       color: "#8b5cf6",
       hoverColor: "#7c3aed",
     },
+    // individual bubble rooms - give each a distinct color
+    "bubble room 1": {
+      color: "#60a5fa", // blue
+      hoverColor: "#2563eb",
+    },
+    "bubble room 2": {
+      color: "#34d399", // green
+      hoverColor: "#059669",
+    },
+    "bubble room 3": {
+      color: "#f97316", // orange
+      hoverColor: "#ea580c",
+    },
+    "bubble room 4": {
+      color: "#f472b6", // pink
+      hoverColor: "#db2777",
+    },
     ManagementOffice3: {
       color: "#f59e0b",
       hoverColor: "#d97706",
@@ -75,6 +92,11 @@ const FloorPlanSVG = () => {
       hoverColor: "#65a30d",
     },
     "beer point": {
+      color: "#eab308",
+      hoverColor: "#ca8a04",
+    },
+    // alias with title case so code that uses "Beer Point" matches
+    "Beer Point": {
       color: "#eab308",
       hoverColor: "#ca8a04",
     },
@@ -202,6 +224,25 @@ const FloorPlanSVG = () => {
                 Hover to see area
               </span>
             </div>
+            {/* Bubble room legend chips */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "14px", height: "14px", background: "#60a5fa", borderRadius: "3px" }} />
+                <span style={{ fontSize: "12px", color: "#666" }}>Bubble 1</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "14px", height: "14px", background: "#34d399", borderRadius: "3px" }} />
+                <span style={{ fontSize: "12px", color: "#666" }}>Bubble 2</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "14px", height: "14px", background: "#f97316", borderRadius: "3px" }} />
+                <span style={{ fontSize: "12px", color: "#666" }}>Bubble 3</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "14px", height: "14px", background: "#f472b6", borderRadius: "3px" }} />
+                <span style={{ fontSize: "12px", color: "#666" }}>Bubble 4</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -225,6 +266,11 @@ const FloorPlanSVG = () => {
             xmlns="http://www.w3.org/2000/svg"
             style={{ maxWidth: "1200px", width: "100%", height: "auto" }}
           >
+            <defs>
+              <clipPath id="beerPointClip">
+                <path d="M227 1030.5H0.5V0.5H227V248H414.5V317.5H619.5V719.5H406V787H227V1030.5Z" />
+              </clipPath>
+            </defs>
             <g stroke="#000">
             <path
               d="M233.5 1032H7V2.00055H233.5V249.501H421V319.001H626V721.001H412.5V788.501H233.5V1032Z"
@@ -1987,21 +2033,27 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("Work Tables Down")}
             />
 
-            {/* Bubble Rooms - Left side middle */}
-            <rect
-              x="40"
-              y="385"
-              width="182"
-              height="265"
-              fill={getSectionColor("Bubble Rooms")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Bubble Rooms" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Bubble Rooms")}
+            {/* Beer Point*/}
+            <path
+              d="M227 1030.5H0.5V0.5H227V248H414.5V317.5H619.5V719.5H406V787H227V1030.5Z"
+              fill={getSectionColor('beer point')}
+              fillOpacity={0.14}
+              stroke={hoveredSection === 'Beer Point' ? '#1a1a1a' : 'transparent'}
+              strokeWidth={3}
+              style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+              onMouseEnter={() => setHoveredSection('Beer Point')}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Rooms")}
+              onClick={() => handleSectionClick('Beer Point')}
             />
+
+            <g
+              clipPath="url(#beerPointClip)"
+              style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+              onMouseEnter={() => setHoveredSection('Beer Point')}
+              onMouseLeave={() => setHoveredSection(null)}
+              onClick={() => handleSectionClick('Beer Point')}
+            >
+            </g>
 
             {/* Bubble Room 1*/}
             <rect
