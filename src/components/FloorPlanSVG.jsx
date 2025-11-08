@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import BookingModal from "./BookingModal";
+import { table } from "framer-motion/client";
 
 const FloorPlanSVG = () => {
   const [hoveredSection, setHoveredSection] = useState(null);
@@ -127,6 +128,65 @@ const FloorPlanSVG = () => {
       hoverColor: "#ca8a04",
     },
   };
+
+  // UP Tables (Cannot be automated because offsets aren't consistent :( )
+  const tableUpData = [
+    { id: 'Table 1 UP', x: 516, y: 88, width: 44, height: 49 },
+    { id: 'Table 2 UP', x: 516, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 3 UP', x: 516, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 4 UP', x: 516 + 44, y: 88, width: 44, height: 49 },
+    { id: 'Table 5 UP', x: 516 + 44, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 6 UP', x: 516 + 44, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 7 UP', x: 516 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'Table 8 UP', x: 516 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 9 UP', x: 516 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 10 UP', x: 516 + 44 + 88 + 43, y: 88, width: 44, height: 49 },
+    { id: 'Table 11 UP', x: 516 + 44 + 88 + 43, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 12 UP', x: 516 + 44 + 88 + 43, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 13 UP', x: 516 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'Table 14 UP', x: 516 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 15 UP', x: 516 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 16 UP', x: 516 + 44 + 88 * 2 + 95, y: 88, width: 44, height: 49 },
+    { id: 'Table 17 UP', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 18 UP', x: 516 + 44 + 88 * 2 + 95, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 19 UP', x: 516 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'Table 20 UP', x: 516 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 21 UP', x: 516 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 22 UP', x: 516 + 44 + 88 * 3 + 137, y: 88, width: 44, height: 49 },
+    { id: 'Table 23 UP', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 24 UP', x: 516 + 44 + 88 * 3 + 137, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 25 UP', x: 516 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'Table 26 UP', x: 516 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 27 UP', x: 516 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 28 UP', x: 516 + 44 + 88 * 4 + 189, y: 88, width: 44, height: 49 },
+    { id: 'Table 29 UP', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 30 UP', x: 516 + 44 + 88 * 4 + 189, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 31 UP', x: 516 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'Table 32 UP', x: 516 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 33 UP', x: 516 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 34 UP', x: 516 + 44 + 88 * 5 + 231, y: 88, width: 44, height: 49 },
+    { id: 'Table 35 UP', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 36 UP', x: 516 + 44 + 88 * 5 + 231, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 37 UP', x: 516 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'Table 38 UP', x: 516 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 39 UP', x: 516 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 40 UP', x: 516 + 44 + 88 * 6 + 283, y: 88, width: 44, height: 49 },
+    { id: 'Table 41 UP', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 42 UP', x: 516 + 44 + 88 * 6 + 283, y: 88 + 49 * 2, width: 44, height: 49 },
+
+    { id: 'Table 43 UP', x: 516 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'Table 44 UP', x: 516 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 45 UP', x: 516 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+    { id: 'Table 46 UP', x: 516 + 44 + 88 * 7 + 325, y: 88, width: 44, height: 49 },
+    { id: 'Table 47 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49, width: 44, height: 49 },
+    { id: 'Table 48 UP', x: 516 + 44 + 88 * 7 + 325, y: 88 + 49 * 2, width: 44, height: 49 },
+  ];
 
   const isAvailable = (sectionName) => {
     const currentHour = currentTime.getHours();
@@ -1924,21 +1984,25 @@ const FloorPlanSVG = () => {
 
             {/* Interactive Overlay Rectangles - DO NOT MODIFY SVG ABOVE */}
             
-            {/* Work Tables UP - Top section */}
-            <rect
-              x="516"
-              y="88"
-              width="1030"
-              height="147"
-              fill={getSectionColor("Work Tables UP")}
-              fillOpacity="0.3"
-              stroke={hoveredSection === "Work Tables UP" ? "#1a1a1a" : "transparent"}
-              strokeWidth="3"
-              style={{ cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={() => setHoveredSection("Work Tables UP")}
-              onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Work Tables UP")}
-            />
+            {/* Work Tables UP */}
+
+            {tableUpData.map(table => (
+              <rect
+                key={table.id}
+                x={table.x}
+                y={table.y}
+                width={table.width}
+                height={table.height}
+                fill={getSectionColor(table.id)}
+                fillOpacity="0.3"
+                stroke={hoveredSection === table.id ? "#1a1a1a" : "transparent"}
+                strokeWidth="3"
+                style={{ cursor: "pointer", transition: "all 0.2s" }}
+                onMouseEnter={() => setHoveredSection(table.id)}
+                onMouseLeave={() => setHoveredSection(null)}
+                onClick={() => handleSectionClick(table.id)}
+              />
+            ))}
 
             <rect
               x="1748"
