@@ -9,6 +9,7 @@ const FloorPlanSVG = () => {
   const [bookings, setBookings] = useState([]);
   const [desks, setDesks] = useState([]); // Store all desk data
   const [loadingDesks, setLoadingDesks] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null); // Store current user data
 
   // Update current time every second for real-time updates
   useEffect(() => {
@@ -19,23 +20,52 @@ const FloorPlanSVG = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Fetch current user data from backend API
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Get userId from the user object stored in localStorage
+        const userStr = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
+        
+        if (!userStr || !token) {
+          console.warn('⚠️ No user or token found in localStorage');
+          return;
+        }
+
+        const user = JSON.parse(userStr);
+        const userId = user._id || user.id;
+
+        console.log('🔄 Fetching user data from backend for userId:', userId);
+        
+        const response = await fetch(`https://molsongbsspaces.onrender.com/api/user/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Fetched user data:', data);
+        
+        // Handle if data is wrapped in a 'data' property
+        const userData = data.data || data;
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error('❌ Error fetching user:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   // Fetch all desks from backend API
   useEffect(() => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    // Mock bookings - replace with API call
-    const mockBookings = [
-      {
-        section: "Work Tables UP",
-        date: "2025-11-08",
-        startTime: "14:00",
-        endTime: "17:00",
-      },
-    ];
-    setBookings(mockBookings);
-=======
-=======
->>>>>>> Stashed changes
     const fetchDesks = async () => {
       try {
         setLoadingDesks(true);
@@ -80,10 +110,6 @@ const FloorPlanSVG = () => {
     const refreshInterval = setInterval(fetchDesks, 30000);
     
     return () => clearInterval(refreshInterval);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   }, []);
 
   // Define sections with their boundaries and colors
@@ -432,37 +458,94 @@ const FloorPlanSVG = () => {
     if (loadingDesks) return true; // Show as available while loading
     
     // Find the desk in our fetched data
-    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    // Backend uses locationId like "A_Table2_M2", we use "Table 2 UP"
+    const desk = desks.find(d => {
+      // Try exact match first
+      if (d.name === deskId || d.id === deskId || d._id === deskId) return true;
+      
+      // Try locationId match
+      if (d.locationId) {
+        // Extract table number from our format: "Table 2 UP" -> 2
+        const match = deskId.match(/Table (\d+) (UP|DOWN)/);
+        if (match) {
+          const tableNum = match[1];
+          const section = match[2];
+          
+          // Backend format: "A_Table2_M2" or similar
+          // Check if locationId contains the table number
+          const locationMatch = d.locationId.toLowerCase().includes(`table${tableNum}`.toLowerCase());
+          
+          if (locationMatch) {
+            console.log(`✅ Matched "${deskId}" to desk:`, d);
+            return true;
+          }
+        }
+      }
+      
+      return false;
+    });
     
     if (!desk) {
       // Desk not found in backend, assume available
+      console.log(`⚠️ Desk not found for: ${deskId}`);
       return true;
     }
 
+    console.log(`🔍 Checking availability for ${deskId}:`, desk);
+
     const now = new Date();
+    console.log(`⏰ Current time: ${now.toISOString()} (${now.getTime()})`);
     
     // Check attendances (primary - current format from backend)
     if (desk.attendances && desk.attendances.length > 0) {
+      console.log(`📋 Found ${desk.attendances.length} attendances for ${deskId}:`, desk.attendances);
+      
       const hasActiveAttendance = desk.attendances.some(attendance => {
+        console.log(`\n--- Checking attendance ---`);
+        console.log(`Status: ${attendance.status}`);
+        console.log(`Raw start: ${attendance.start}`);
+        console.log(`Raw end: ${attendance.end}`);
+        
         // Check if attendance is pending or active
         if (attendance.status === 'pending' || attendance.status === 'active') {
           const attendanceStart = new Date(attendance.start);
           const attendanceEnd = attendance.end ? new Date(attendance.end) : null;
           
+          console.log(`Parsed start: ${attendanceStart.toISOString()} (${attendanceStart.getTime()})`);
+          console.log(`Parsed end: ${attendanceEnd ? attendanceEnd.toISOString() + ' (' + attendanceEnd.getTime() + ')' : 'null'}`);
+          console.log(`Current: ${now.toISOString()} (${now.getTime()})`);
+          
           // If there's a start time but no end time, it's currently occupied
           if (!attendanceEnd) {
-            return now >= attendanceStart;
+            const isOccupied = now >= attendanceStart;
+            console.log(`✅ No end time - Comparing: now (${now.getTime()}) >= start (${attendanceStart.getTime()}) = ${isOccupied}`);
+            return isOccupied;
           }
           
           // Check if current time is within attendance period
-          return now >= attendanceStart && now <= attendanceEnd;
+          const nowIsAfterStart = now >= attendanceStart;
+          const nowIsBeforeEnd = now <= attendanceEnd;
+          const isActive = nowIsAfterStart && nowIsBeforeEnd;
+          
+          console.log(`📊 Comparison:`);
+          console.log(`  now >= start: ${now.getTime()} >= ${attendanceStart.getTime()} = ${nowIsAfterStart}`);
+          console.log(`  now <= end: ${now.getTime()} <= ${attendanceEnd.getTime()} = ${nowIsBeforeEnd}`);
+          console.log(`  Is active: ${isActive}`);
+          
+          return isActive;
         }
+        console.log(`⏭️ Skipping - status is "${attendance.status}"`);
         return false;
       });
       
-      if (hasActiveAttendance) return false; // Occupied
+      if (hasActiveAttendance) {
+        console.log(`\n❌ FINAL RESULT: ${deskId} is OCCUPIED\n`);
+        return false; // Occupied
+      } else {
+        console.log(`\n✅ No active attendance found for ${deskId}\n`);
+      }
     }
-
+    
     // Check bookings (fallback - legacy format)
     if (desk.bookings && desk.bookings.length > 0) {
       const hasActiveBooking = desk.bookings.some(booking => {
@@ -476,6 +559,7 @@ const FloorPlanSVG = () => {
       if (hasActiveBooking) return false; // Booked
     }
 
+    console.log(`✅ ${deskId} is AVAILABLE`);
     return true; // Available if no active attendance or booking
   };
 
@@ -506,9 +590,30 @@ const FloorPlanSVG = () => {
 
   // Get detailed booking information for a desk
   const getDeskInfo = (deskId) => {
-    const desk = desks.find(d => d.name === deskId || d.id === deskId || d._id === deskId);
+    // Use same matching logic as isDeskAvailable
+    const desk = desks.find(d => {
+      // Try exact match first
+      if (d.name === deskId || d.id === deskId || d._id === deskId) return true;
+      
+      // Try locationId match
+      if (d.locationId) {
+        // Extract table number from our format: "Table 2 UP" -> 2
+        const match = deskId.match(/Table (\d+) (UP|DOWN)/);
+        if (match) {
+          const tableNum = match[1];
+          
+          // Backend format: "A_Table2_M2" or similar
+          const locationMatch = d.locationId.toLowerCase().includes(`table${tableNum}`.toLowerCase());
+          
+          if (locationMatch) return true;
+        }
+      }
+      
+      return false;
+    });
     
     if (!desk) {
+      console.log(`⚠️ getDeskInfo: Desk not found for ${deskId}`);
       return {
         name: deskId,
         status: 'Unknown',
@@ -517,6 +622,8 @@ const FloorPlanSVG = () => {
         bookings: []
       };
     }
+
+    console.log(`📊 getDeskInfo for ${deskId}:`, desk);
 
     const now = new Date();
     let currentBooking = null;
@@ -609,17 +716,173 @@ const FloorPlanSVG = () => {
   };
 
   const handleBookingConfirm = async (bookingData) => {
-    // Here you would make an API call to save the booking
-    console.log("Booking data:", bookingData);
+    try {
+      console.log("📤 Booking data:", bookingData);
+      console.log("📤 All desks:", desks);
 
-    // Update local bookings state
-    setBookings([...bookings, bookingData]);
+      // Get the desk from our desks array to find the backend desk ID
+      const desk = desks.find(d => {
+        console.log(`🔍 Checking desk:`, d);
+        
+        // Try direct locationId match first (e.g., "A_Table2.M1")
+        if (d.locationId === bookingData.deskId || d.locationId === bookingData.section) {
+          console.log(`✅ Direct locationId match!`);
+          return true;
+        }
+        
+        // Try direct ID match
+        if (d._id === bookingData.deskId || d.id === bookingData.deskId) {
+          console.log(`✅ Direct ID match!`);
+          return true;
+        }
+        
+        // Try matching "Table X UP/DOWN" format to locationId
+        if (d.locationId) {
+          const match = bookingData.section.match(/Table (\d+) (UP|DOWN)/);
+          if (match) {
+            const tableNum = match[1];
+            const locationMatch = d.locationId.toLowerCase().includes(`table${tableNum}`.toLowerCase());
+            if (locationMatch) {
+              console.log(`✅ Pattern match for Table ${tableNum}!`);
+              return true;
+            }
+          }
+        }
+        
+        return false;
+      });
 
-    // Close modal
-    setSelectedSection(null);
+      if (!desk) {
+        console.error('❌ Could not find desk. Searched for:', {
+          deskId: bookingData.deskId,
+          section: bookingData.section
+        });
+        alert('Could not find desk in backend. Please try again.');
+        return;
+      }
 
-    // Show success message
-    alert(`Booking confirmed for ${bookingData.section}!`);
+      const backendDeskId = desk._id || desk.id;
+      console.log("📍 Found desk ID:", backendDeskId);
+
+      // Combine date and time into ISO format (UTC)
+      // The backend expects UTC times with Z suffix
+      // Format: "2025-11-08T23:00:00Z"
+      
+      // Handle times that cross midnight (00:00, 00:30 are next day)
+      const startHour = parseInt(bookingData.startTime.split(':')[0]);
+      const endHour = parseInt(bookingData.endTime.split(':')[0]);
+      
+      let startDate = bookingData.date;
+      let endDate = bookingData.date;
+      
+      // If end time is 00:00 or 00:30, it's the next day
+      if (endHour === 0) {
+        const nextDay = new Date(bookingData.date);
+        nextDay.setDate(nextDay.getDate() + 1);
+        endDate = nextDay.toISOString().split('T')[0];
+      }
+      
+      const startDateTime = `${startDate}T${bookingData.startTime}:00Z`;
+      const endDateTime = `${endDate}T${bookingData.endTime}:00Z`;
+
+      console.log("📅 Start datetime:", startDateTime);
+      console.log("📅 End datetime:", endDateTime);
+
+      // Validate that end time is after start time
+      const startDateObj = new Date(startDateTime);
+      const endDateObj = new Date(endDateTime);
+      
+      if (endDateObj <= startDateObj) {
+        alert('End time must be after start time!');
+        return;
+      }
+
+      // Get current user ID from the fetched user data, fallback to localStorage
+      let userId;
+      if (currentUser) {
+        userId = currentUser._id || currentUser.id;
+        console.log("👤 Using userId from API:", userId);
+      } else {
+        // Fallback: get from localStorage user object
+        try {
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            userId = user._id || user.id;
+            console.log("👤 Using userId from localStorage user object:", userId);
+          }
+        } catch (error) {
+          console.error("Error parsing user from localStorage:", error);
+        }
+      }
+      
+      if (!userId) {
+        alert('User not found. Please log in again.');
+        return;
+      }
+      
+      const requestBody = {
+        start: startDateTime,
+        end: endDateTime,
+        attendees: [userId]
+      };
+
+      console.log("📤 Sending booking request:", requestBody);
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`https://molsongbsspaces.onrender.com/api/desk/book/${backendDeskId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to book desk: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("✅ Booking successful:", result);
+
+      // Update local bookings state
+      setBookings([...bookings, bookingData]);
+
+      // Close modal
+      setSelectedSection(null);
+
+      // Show success message
+      alert(`✅ Booking confirmed for ${bookingData.section}!\nTime: ${bookingData.startTime} - ${bookingData.endTime}`);
+
+      // Refresh desk data to show updated availability
+      // The useEffect will handle this automatically with the 30-second refresh, 
+      // but we can trigger it immediately
+      const fetchDesks = async () => {
+        try {
+          const response = await fetch('https://molsongbsspaces.onrender.com/api/desk/all', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            const desksData = data.data || data;
+            setDesks(Array.isArray(desksData) ? desksData : []);
+          }
+        } catch (error) {
+          console.error('Error refreshing desks:', error);
+        }
+      };
+      fetchDesks();
+
+    } catch (error) {
+      console.error('❌ Error booking desk:', error);
+      alert(`Failed to book desk: ${error.message}`);
+    }
   };
 
   return (
@@ -2880,6 +3143,7 @@ const FloorPlanSVG = () => {
       {selectedSection && (
         <BookingModal
           section={selectedSection}
+          deskId={selectedSection}
           isAvailable={isAvailable(selectedSection)}
           currentTime={currentTime}
           onClose={handleCloseModal}

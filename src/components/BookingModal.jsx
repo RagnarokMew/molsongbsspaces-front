@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm }) => {
+const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm, deskId }) => {
   const [bookingData, setBookingData] = useState({
     section: section,
+    deskId: deskId,
     date: new Date().toISOString().split('T')[0],
     startTime: '09:00',
-    endTime: '17:00',
-    notes: ''
+    endTime: '17:00'
   });
 
   const handleSubmit = (e) => {
@@ -22,9 +22,9 @@ const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm })
     }));
   };
 
-  // Generate time options
+  // Generate time options (all 24 hours)
   const timeOptions = [];
-  for (let hour = 7; hour <= 20; hour++) {
+  for (let hour = 0; hour < 24; hour++) {
     for (let min = 0; min < 60; min += 30) {
       const timeStr = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
       timeOptions.push(timeStr);
@@ -245,38 +245,6 @@ const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm })
                   ))}
                 </select>
               </div>
-            </div>
-
-            {/* Notes */}
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{
-                display: 'block',
-                marginBottom: '8px',
-                fontWeight: '600',
-                color: '#333',
-                fontSize: '14px'
-              }}>
-                📝 Notes (Optional)
-              </label>
-              <textarea
-                value={bookingData.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                placeholder="Any special requirements or notes..."
-                rows="4"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  resize: 'vertical',
-                  fontFamily: 'inherit',
-                  transition: 'border-color 0.2s',
-                  boxSizing: 'border-box'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0067AC'}
-                onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
-              />
             </div>
 
             {/* Action Buttons */}
