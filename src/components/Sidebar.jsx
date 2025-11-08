@@ -8,6 +8,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
@@ -17,6 +18,11 @@ function Sidebar() {
       setAvatarUrl(userData.image || null);
     }
   }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleAvatarUpdate = (newAvatarUrl) => {
     setAvatarUrl(newAvatarUrl);
@@ -75,16 +81,105 @@ function Sidebar() {
   ];
 
   return (
-    <div style={{
-      width: '280px',
-      minHeight: '100vh',
-      background: 'linear-gradient(to bottom, #2d3748, #1a202c)',
-      display: 'flex',
-      flexDirection: 'column',
-      boxShadow: '4px 0 6px rgba(0, 0, 0, 0.1)'
-    }}>
-      {/* Profile Section */}
-      <div style={{
+    <>
+      {/* Hamburger Button - Mobile Only */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        style={{
+          position: 'fixed',
+          top: '1rem',
+          left: '1rem',
+          zIndex: 10000,
+          display: 'none',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          width: '2.5rem',
+          height: '2.5rem',
+          background: 'linear-gradient(135deg, #0067AC 0%, #002147 100%)',
+          border: '2px solid #F6DD58',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          padding: '0.5rem',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        }}
+        className="mobile-menu-button"
+      >
+        <motion.span
+          animate={{
+            rotate: isMobileMenuOpen ? 45 : 0,
+            y: isMobileMenuOpen ? 8 : 0,
+          }}
+          style={{
+            width: '100%',
+            height: '2px',
+            background: '#F6DD58',
+            borderRadius: '2px',
+            transformOrigin: 'center',
+          }}
+        />
+        <motion.span
+          animate={{
+            opacity: isMobileMenuOpen ? 0 : 1,
+          }}
+          style={{
+            width: '100%',
+            height: '2px',
+            background: '#F6DD58',
+            borderRadius: '2px',
+          }}
+        />
+        <motion.span
+          animate={{
+            rotate: isMobileMenuOpen ? -45 : 0,
+            y: isMobileMenuOpen ? -8 : 0,
+          }}
+          style={{
+            width: '100%',
+            height: '2px',
+            background: '#F6DD58',
+            borderRadius: '2px',
+            transformOrigin: 'center',
+          }}
+        />
+      </button>
+
+      {/* Overlay - Mobile Only */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9998,
+            display: 'none',
+          }}
+          className="mobile-overlay"
+        />
+      )}
+
+      {/* Sidebar */}
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{ x: isMobileMenuOpen ? 0 : 0 }}
+        style={{
+          width: '280px',
+          minHeight: '100vh',
+          background: 'linear-gradient(to bottom, #2d3748, #1a202c)',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '4px 0 6px rgba(0, 0, 0, 0.1)',
+          position: 'relative',
+          zIndex: 9999,
+        }}
+        className="sidebar"
+      >
+        {/* Profile Section */}
+        <div style={{
         padding: '2rem 1.5rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         textAlign: 'center'
@@ -258,7 +353,35 @@ function Sidebar() {
           <span>Sign Out</span>
         </button>
       </div>
-    </div>
+    </motion.div>
+    
+    {/* Add CSS for responsive behavior */}
+    <style>{`
+      @media (max-width: 768px) {
+        .mobile-menu-button {
+          display: flex !important;
+        }
+        
+        .mobile-overlay {
+          display: block !important;
+        }
+        
+        .sidebar {
+          position: fixed !important;
+          top: 0;
+          left: ${isMobileMenuOpen ? '0' : '-280px'} !important;
+          height: 100vh;
+          transition: left 0.3s ease !important;
+        }
+      }
+      
+      @media (min-width: 769px) {
+        .sidebar {
+          position: relative !important;
+        }
+      }
+    `}</style>
+    </>
   );
 }
 
