@@ -1,7 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import JSConfetti from 'js-confetti';
 import '../index.css';
 
 function Login() {
@@ -10,13 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [jsConfetti, setJsConfetti] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Initialize confetti instance
-    setJsConfetti(new JSConfetti());
-  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);

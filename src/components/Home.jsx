@@ -1,4 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react'
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,9 +14,7 @@ import {
   Legend,
 } from 'chart.js'
 import { Pie, Bar, Line } from 'react-chartjs-2'
-import { motion } from 'framer-motion'
-import { Activity, Users, Clock, PieChart as PieIcon, BarChart as BarIcon, TrendingUp } from 'lucide-react'
-import JSConfetti from 'js-confetti'
+import { TrendingUp } from 'lucide-react'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend)
 
@@ -22,32 +22,9 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 ChartJS.defaults.color = '#64748b'
 ChartJS.defaults.borderColor = 'rgba(148, 163, 184, 0.1)'
 
-const KPI = ({ title, value, icon: Icon, accent = 'from-blue-500 to-indigo-600' }) => (
-  <motion.div
-    whileHover={{ scale: 1.03 }}
-    className="flex-1"
-  >
-    <div className={`rounded-lg overflow-hidden shadow-lg bg-gradient-to-br ${accent} text-white p-4`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-xs opacity-90">{title}</div>
-          <div className="text-2xl font-bold mt-1">{value}</div>
-        </div>
-        <div className="p-2 bg-white/20 rounded">
-          {Icon ? <Icon size={22} /> : <Activity size={22} />}
-        </div>
-      </div>
-      <div className="h-2 bg-white/20 rounded-full mt-4 overflow-hidden">
-        <div className="h-2 bg-white rounded-full" style={{ width: `${Math.min(100, parseFloat(String(value)) || 0)}%` }} />
-      </div>
-    </div>
-  </motion.div>
-)
-
 // Modern stats card component matching AdminBookings style
 const StatsCard = ({ label, value, icon, color = '#1d4ed8' }) => (
-  <motion.div
-    whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(96, 165, 250, 0.22)' }}
+  <div
     style={{
       background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
       border: '1px solid rgba(148, 163, 184, 0.25)',
@@ -55,7 +32,17 @@ const StatsCard = ({ label, value, icon, color = '#1d4ed8' }) => (
       padding: 'clamp(16px, 2vw, 20px) clamp(20px, 4vw, 28px)',
       textAlign: 'center',
       boxShadow: '0 12px 24px rgba(15, 23, 42, 0.08)',
-      height: '100%'
+      height: '100%',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'translateY(-4px)';
+      e.currentTarget.style.boxShadow = '0 16px 32px rgba(96, 165, 250, 0.22)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = '0 12px 24px rgba(15, 23, 42, 0.08)';
     }}
   >
     <div style={{ fontSize: '28px', marginBottom: '12px' }}>{icon}</div>
@@ -77,24 +64,104 @@ const StatsCard = ({ label, value, icon, color = '#1d4ed8' }) => (
     }}>
       {value}
     </div>
-  </motion.div>
+  </div>
 )
 
-// Hardcoded demo data (nice colors, realistic numbers)
-const demo = {
-  occupancy: { occupied: 28, free: 12, total: 40, rate: 70 },
-  zones: {
-    labels: ['A', 'B', 'C', 'D'],
-    occupied: [7, 6, 6, 9],
-    totals: [11, 10, 10, 9],
-  },
-  trend: {
-    labels: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00'],
-    occupancyPct: [45, 55, 60, 68, 72, 70],
-  },
-}
-
 const Home = () => {
+  const [stats, setStats] = useState({
+    totalDesks: 0,
+    occupiedDesks: 0,
+    availableDesks: 0,
+    occupancyRate: 0,
+    totalBookings: 0,
+    pendingBookings: 0,
+    acceptedBookings: 0,
+    declinedBookings: 0,
+    totalUsers: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch statistics from API
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+
+      // Fetch desks data
+      const desksRes = await fetch('https://molsongbsspaces.onrender.com/api/desk/all', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const desksData = desksRes.ok ? await desksRes.json() : { data: [] };
+      const desks = desksData.data || desksData || [];
+
+      // Calculate desk stats
+      let totalDesks = 0;
+      let occupiedDesks = 0;
+      let totalBookings = 0;
+      let pendingBookings = 0;
+      let acceptedBookings = 0;
+      let declinedBookings = 0;
+
+      desks.forEach((desk) => {
+        totalDesks++;
+        if (desk.isOccupied) occupiedDesks++;
+
+        if (desk.bookings && desk.bookings.length > 0) {
+          desk.bookings.forEach((booking) => {
+            totalBookings++;
+            if (!booking.status || booking.status === 'pending') pendingBookings++;
+            else if (booking.status === 'accepted') acceptedBookings++;
+            else if (booking.status === 'declined') declinedBookings++;
+          });
+        }
+      });
+
+      // Fetch users data
+      const usersRes = await fetch('https://molsongbsspaces.onrender.com/api/user/all', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const usersData = usersRes.ok ? await usersRes.json() : { data: [] };
+      const users = Array.isArray(usersData?.data) ? usersData.data : Array.isArray(usersData) ? usersData : [];
+      const totalUsers = users.length;
+
+      const availableDesks = totalDesks - occupiedDesks;
+      const occupancyRate = totalDesks > 0 ? Math.round((occupiedDesks / totalDesks) * 100) : 0;
+
+      setStats({
+        totalDesks,
+        occupiedDesks,
+        availableDesks,
+        occupancyRate,
+        totalBookings,
+        pendingBookings,
+        acceptedBookings,
+        declinedBookings,
+        totalUsers
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const pieData = useMemo(() => ({
     labels: ['Occupied', 'Available'],
