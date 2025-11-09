@@ -108,7 +108,6 @@ const FloorPlanSVG = () => {
 
   const isLiveMode = viewMode === 'live';
   const referenceTime = isLiveMode ? currentTime : searchTimestamp;
-  const selectedDeskStatus = selectedSection ? getDeskStatus(selectedSection) : null;
 
   // Fetch all desks from backend API
   useEffect(() => {
@@ -738,6 +737,8 @@ const FloorPlanSVG = () => {
         return '#10b981'; // Green - available
     }
   };
+
+  const selectedDeskStatus = selectedSection ? getDeskStatus(selectedSection) : null;
 
   // Legacy function for sections (non-table areas)
   const isAvailable = (sectionName) => {
@@ -3269,8 +3270,7 @@ const FloorPlanSVG = () => {
         <BookingModal
           section={selectedSection}
           deskId={selectedSection}
-          isAvailable={getDeskStatus(selectedSection) === 'available'}
-          deskStatus={getDeskStatus(selectedSection)}
+          deskStatus={selectedDeskStatus ?? 'available'}
           currentTime={referenceTime}
           isLiveMode={isLiveMode}
           onClose={handleCloseModal}
