@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskStatus = 'available', isLiveMode = true }) => {
