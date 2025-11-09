@@ -114,8 +114,7 @@ function FindMyMate() {
 	};
 
 	const filteredColleagues = colleagues.filter(colleague =>
-		colleague.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-		colleague.department.toLowerCase().includes(searchQuery.toLowerCase())
+		colleague.name.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
 	return (
@@ -251,7 +250,7 @@ function FindMyMate() {
 										fontSize: '1.25rem',
 										fontWeight: 'bold',
 										flexShrink: 0,
-									}} src={colleague.avatar} />
+									}} src={colleague.avatar || "https://molsongbsspaces.onrender.com/images/av1.png"} />
 
 									<div className="flex-1 min-w-0">
 										<div className="flex items-center gap-2 mb-1">
