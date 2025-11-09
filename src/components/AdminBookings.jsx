@@ -276,10 +276,15 @@ const AdminBookings = () => {
     <div
       style={{
         minHeight: '100vh',
+        height: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%)',
         padding: isMobile ? '24px 16px 36px' : isTablet ? '32px 20px 44px' : '40px 24px 52px',
         position: 'relative',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        touchAction: 'pan-y',
+        overscrollBehavior: 'auto'
       }}
     >
       <div
