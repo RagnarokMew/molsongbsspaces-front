@@ -3,315 +3,315 @@ import { useState, useEffect } from 'react';
 import '../index.css';
 
 function FindMyMate() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [colleagues, setColleagues] = useState([]);
-  const [loading, setLoading] = useState(true);
+	const [searchQuery, setSearchQuery] = useState('');
+	const [selectedDate, setSelectedDate] = useState('');
+	const [colleagues, setColleagues] = useState([]);
+	const [loading, setLoading] = useState(true);
 
-  const API_BASE = window.location.hostname.includes('localhost')
-      ? 'http://localhost:3000'
-      : 'https://molsongbsspaces.onrender.com';
+	const API_BASE = window.location.hostname.includes('localhost')
+		? 'https://molsongbsspaces.onrender.com'
+		: 'http://localhost:3000';
 
 
-  useEffect(() => {
-    const fetchColleagues = async () => {
-      try {
-        const usersResponse = await fetch(`${API_BASE}/api/user/all`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        const { data: users } = await usersResponse.json();
+	useEffect(() => {
+		const fetchColleagues = async () => {
+			try {
+				const usersResponse = await fetch(`${API_BASE}/api/user/all`, {
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`,
+					},
+				});
+				const { data: users } = await usersResponse.json();
 
-        const colleaguesWithPositions = await Promise.all(
-          users.map(async (user) => {
-            const positionResponse = await fetch(`${API_BASE}/api/user/positions`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-              },
-              body: JSON.stringify({ userId: user._id }),
-            });
+				const colleaguesWithPositions = await Promise.all(
+					users.map(async (user) => {
+						const positionResponse = await fetch(`${API_BASE}/api/user/positions`, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							},
+							body: JSON.stringify({ userId: user._id }),
+						});
 
-            const { data: positions } = await positionResponse.json();
+						const { data: positions } = await positionResponse.json();
 
-            // Filter positions for active bookings
-            const activeBooking = positions.flatMap(position => {
-              const locationId = position.locationId;
+						// Filter positions for active bookings
+						const activeBooking = positions.flatMap(position => {
+							const locationId = position.locationId;
 
-              // Filter bookings by status and time, and then map to include locationId
-              return position.bookings
-                .filter(booking => {
-                  // Check status
-                  if (booking.status !== 'accepted') {
-                    return false;
-                  }
+							// Filter bookings by status and time, and then map to include locationId
+							return position.bookings
+								.filter(booking => {
+									// Check status
+									if (booking.status !== 'accepted') {
+										return false;
+									}
 
-                  // Check time range
-                  const startTime = new Date(booking.start).getTime();
-                  const endTime = new Date(booking.end).getTime();
-                  const currentTime = new Date().getTime();
+									// Check time range
+									const startTime = new Date(booking.start).getTime();
+									const endTime = new Date(booking.end).getTime();
+									const currentTime = new Date().getTime();
 
-                  // Condition: start time <= current time <= end time
-                  return startTime <= currentTime && currentTime <= endTime;
-                })
-                .map(booking => ({
-                  // Keep all original booking fields and add locationId
-                  ...booking,
-                  locationId: locationId
-                }));
-            })[0];
+									// Condition: start time <= current time <= end time
+									return startTime <= currentTime && currentTime <= endTime;
+								})
+								.map(booking => ({
+									// Keep all original booking fields and add locationId
+									...booking,
+									locationId: locationId
+								}));
+						})[0];
 
-            return {
-              id: user._id,
-              name: user.name,
-              email: user.email,
-              location: activeBooking?.locationId || 'Not in office',
-              status: activeBooking ? 'in-office' : 'offline',
-              avatar: user.image,
-            };
-          })
-        );
+						return {
+							id: user._id,
+							name: user.name,
+							email: user.email,
+							location: activeBooking?.locationId || 'Not in office',
+							status: activeBooking ? 'in-office' : 'offline',
+							avatar: user.image,
+						};
+					})
+				);
 
-        setColleagues(colleaguesWithPositions);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching colleagues:', error);
-        setLoading(false);
-      }
-    };
+				setColleagues(colleaguesWithPositions);
+				setLoading(false);
+			} catch (error) {
+				console.error('Error fetching colleagues:', error);
+				setLoading(false);
+			}
+		};
 
-    fetchColleagues();
-  }, []);
+		fetchColleagues();
+	}, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'in-office':
-        return '#10b981';
-      case 'remote':
-        return '#f59e0b';
-      case 'offline':
-        return '#6b7280';
-      default:
-        return '#6b7280';
-    }
-  };
+	const getStatusColor = (status) => {
+		switch (status) {
+			case 'in-office':
+				return '#10b981';
+			case 'remote':
+				return '#f59e0b';
+			case 'offline':
+				return '#6b7280';
+			default:
+				return '#6b7280';
+		}
+	};
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 'in-office':
-        return 'In Office';
-      case 'remote':
-        return 'Remote';
-      case 'offline':
-        return 'Offline';
-      default:
-        return 'Unknown';
-    }
-  };
+	const getStatusLabel = (status) => {
+		switch (status) {
+			case 'in-office':
+				return 'In Office';
+			case 'remote':
+				return 'Remote';
+			case 'offline':
+				return 'Offline';
+			default:
+				return 'Unknown';
+		}
+	};
 
-  const filteredColleagues = colleagues.filter(colleague =>
-    colleague.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    colleague.department.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+	const filteredColleagues = colleagues.filter(colleague =>
+		colleague.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+		colleague.department.toLowerCase().includes(searchQuery.toLowerCase())
+	);
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-7xl mx-auto"
-      >
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-molson-blue mb-2">
-            Find My Mate
-          </h1>
-          <p className="text-gray-600">
-            Locate your colleagues and see who's in the office today
-          </p>
-        </div>
+	return (
+		<div className="min-h-screen bg-gray-50 p-8">
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6 }}
+				className="max-w-7xl mx-auto"
+			>
+				<div className="mb-8">
+					<h1 className="text-4xl font-bold text-molson-blue mb-2">
+						Find My Mate
+					</h1>
+					<p className="text-gray-600">
+						Locate your colleagues and see who's in the office today
+					</p>
+				</div>
 
-        {/* Search and Filters */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Search by name or department
-              </label>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search colleagues..."
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '0.5rem',
-                  border: '2px solid #e5e7eb',
-                  outline: 'none',
-                  transition: 'border-color 0.3s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0067AC'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-              />
-            </div>
+				{/* Search and Filters */}
+				<div className="bg-white rounded-xl shadow-md p-6 mb-8">
+					<div className="grid md:grid-cols-2 gap-4">
+						<div>
+							<label className="block text-sm font-semibold text-gray-700 mb-2">
+								Search by name or department
+							</label>
+							<input
+								type="text"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								placeholder="Search colleagues..."
+								style={{
+									width: '100%',
+									padding: '0.75rem 1rem',
+									borderRadius: '0.5rem',
+									border: '2px solid #e5e7eb',
+									outline: 'none',
+									transition: 'border-color 0.3s'
+								}}
+								onFocus={(e) => e.target.style.borderColor = '#0067AC'}
+								onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+							/>
+						</div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Select Date
-              </label>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '0.5rem',
-                  border: '2px solid #e5e7eb',
-                  outline: 'none',
-                  transition: 'border-color 0.3s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0067AC'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-              />
-            </div>
-          </div>
-        </div>
+						<div>
+							<label className="block text-sm font-semibold text-gray-700 mb-2">
+								Select Date
+							</label>
+							<input
+								type="date"
+								value={selectedDate}
+								onChange={(e) => setSelectedDate(e.target.value)}
+								style={{
+									width: '100%',
+									padding: '0.75rem 1rem',
+									borderRadius: '0.5rem',
+									border: '2px solid #e5e7eb',
+									outline: 'none',
+									transition: 'border-color 0.3s'
+								}}
+								onFocus={(e) => e.target.style.borderColor = '#0067AC'}
+								onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+							/>
+						</div>
+					</div>
+				</div>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {colleagues.filter(c => c.status === 'in-office').length}
-                </p>
-                <p className="text-sm text-gray-600">In Office Today</p>
-              </div>
-            </div>
-          </div>
+				{/* Stats */}
+				<div className="grid md:grid-cols-3 gap-6 mb-8">
+					<div className="bg-white rounded-xl p-6 shadow-md">
+						<div className="flex items-center gap-3">
+							<div className="w-3 h-3 rounded-full bg-green-500"></div>
+							<div>
+								<p className="text-2xl font-bold text-gray-900">
+									{colleagues.filter(c => c.status === 'in-office').length}
+								</p>
+								<p className="text-sm text-gray-600">In Office Today</p>
+							</div>
+						</div>
+					</div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {colleagues.filter(c => c.status === 'remote').length}
-                </p>
-                <p className="text-sm text-gray-600">Working Remote</p>
-              </div>
-            </div>
-          </div>
+					<div className="bg-white rounded-xl p-6 shadow-md">
+						<div className="flex items-center gap-3">
+							<div className="w-3 h-3 rounded-full bg-orange-500"></div>
+							<div>
+								<p className="text-2xl font-bold text-gray-900">
+									{colleagues.filter(c => c.status === 'remote').length}
+								</p>
+								<p className="text-sm text-gray-600">Working Remote</p>
+							</div>
+						</div>
+					</div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {colleagues.filter(c => c.status === 'offline').length}
-                </p>
-                <p className="text-sm text-gray-600">Offline</p>
-              </div>
-            </div>
-          </div>
-        </div>
+					<div className="bg-white rounded-xl p-6 shadow-md">
+						<div className="flex items-center gap-3">
+							<div className="w-3 h-3 rounded-full bg-gray-500"></div>
+							<div>
+								<p className="text-2xl font-bold text-gray-900">
+									{colleagues.filter(c => c.status === 'offline').length}
+								</p>
+								<p className="text-sm text-gray-600">Offline</p>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        {/* Colleagues Grid */}
-        {loading ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Loading colleagues...</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredColleagues.map((colleague, index) => (
-              <motion.div
-                key={colleague.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-xl shadow-md p-6 cursor-pointer"
-              >
-                <div className="flex items-start gap-4">
-                  <img style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #0067AC, #002147)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontSize: '1.25rem',
-                    fontWeight: 'bold',
-                    flexShrink: 0,
-                  }} src={colleague.avatar} />
+				{/* Colleagues Grid */}
+				{loading ? (
+					<div className="text-center py-12">
+						<p className="text-gray-500 text-lg">Loading colleagues...</p>
+					</div>
+				) : (
+					<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{filteredColleagues.map((colleague, index) => (
+							<motion.div
+								key={colleague.id}
+								initial={{ opacity: 0, scale: 0.9 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.3, delay: index * 0.1 }}
+								whileHover={{ scale: 1.02 }}
+								className="bg-white rounded-xl shadow-md p-6 cursor-pointer"
+							>
+								<div className="flex items-start gap-4">
+									<img style={{
+										width: '60px',
+										height: '60px',
+										borderRadius: '50%',
+										background: 'linear-gradient(135deg, #0067AC, #002147)',
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										color: 'white',
+										fontSize: '1.25rem',
+										fontWeight: 'bold',
+										flexShrink: 0,
+									}} src={colleague.avatar} />
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-semibold text-gray-900 truncate">
-                        {colleague.name}
-                      </h3>
-                      <div
-                        style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          backgroundColor: getStatusColor(colleague.status),
-                          flexShrink: 0
-                        }}
-                      />
-                    </div>
+									<div className="flex-1 min-w-0">
+										<div className="flex items-center gap-2 mb-1">
+											<h3 className="text-lg font-semibold text-gray-900 truncate">
+												{colleague.name}
+											</h3>
+											<div
+												style={{
+													width: '8px',
+													height: '8px',
+													borderRadius: '50%',
+													backgroundColor: getStatusColor(colleague.status),
+													flexShrink: 0
+												}}
+											/>
+										</div>
 
-                    <p className="text-sm text-gray-600 mb-1 truncate">
-                      {colleague.email}
-                    </p>
+										<p className="text-sm text-gray-600 mb-1 truncate">
+											{colleague.email}
+										</p>
 
-                    <p className="text-sm text-molson-blue font-semibold mb-2">
-                      {colleague.department}
-                    </p>
+										<p className="text-sm text-molson-blue font-semibold mb-2">
+											{colleague.department}
+										</p>
 
-                    <div className="flex items-center gap-2 mb-3">
-                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <p className="text-sm text-gray-600">{colleague.location}</p>
-                    </div>
+										<div className="flex items-center gap-2 mb-3">
+											<svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+											</svg>
+											<p className="text-sm text-gray-600">{colleague.location}</p>
+										</div>
 
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '9999px',
-                        fontSize: '0.75rem',
-                        fontWeight: '600',
-                        backgroundColor: `${getStatusColor(colleague.status)}20`,
-                        color: getStatusColor(colleague.status)
-                      }}
-                    >
-                      {getStatusLabel(colleague.status)}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+										<span
+											style={{
+												display: 'inline-block',
+												padding: '0.25rem 0.75rem',
+												borderRadius: '9999px',
+												fontSize: '0.75rem',
+												fontWeight: '600',
+												backgroundColor: `${getStatusColor(colleague.status)}20`,
+												color: getStatusColor(colleague.status)
+											}}
+										>
+											{getStatusLabel(colleague.status)}
+										</span>
+									</div>
+								</div>
+							</motion.div>
+						))}
+					</div>
+				)}
 
-        {filteredColleagues.length === 0 && !loading && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No colleagues found</p>
-          </div>
-        )}
-      </motion.div>
-    </div>
-  );
+				{filteredColleagues.length === 0 && !loading && (
+					<div className="text-center py-12">
+						<p className="text-gray-500 text-lg">No colleagues found</p>
+					</div>
+				)}
+			</motion.div>
+		</div>
+	);
 }
 
 export default FindMyMate;
