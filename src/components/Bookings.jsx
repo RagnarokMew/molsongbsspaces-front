@@ -123,8 +123,9 @@ function Bookings() {
             }));
           });
 
-          setBookings(mapped);
-          console.info(`Loaded ${mapped.length} bookings (flattened by location) from API`);
+          const finalList = filterAndSortBookings(mapped);
+          setBookings(finalList);
+          console.info(`Loaded ${finalList.length} bookings (flattened by location) from API`);
 
         } else {
           // fallback: try to treat raw as an array of booking-like objects
@@ -139,12 +140,14 @@ function Bookings() {
 
           if (Array.isArray(raw)) {
             const mapped = raw.map(normalize);
-            setBookings(mapped);
-            console.info(`Loaded ${mapped.length} bookings from API`);
+            const finalList = filterAndSortBookings(mapped);
+            setBookings(finalList);
+            console.info(`Loaded ${finalList.length} bookings from API`);
           } else if (raw && typeof raw === 'object') {
             const mapped = [normalize(raw)];
-            setBookings(mapped);
-            console.info('Loaded 1 booking object from API');
+            const finalList = filterAndSortBookings(mapped);
+            setBookings(finalList);
+            console.info(`Loaded ${finalList.length} booking object from API`);
           } else {
             console.warn('Unexpected bookings payload, clearing bookings', data);
             setBookings([]);
@@ -171,8 +174,6 @@ function Bookings() {
   const formatDateTime = (dateString) => {
     try {
       const date = new Date(dateString);
-      // Server is in Frankfurt (UTC+1). Display times offset by +1 hour to match server local time.
-      date.setHours(date.getHours() + 1);
       return date.toLocaleString(undefined, {
         month: 'short',
         day: 'numeric',
@@ -191,6 +192,40 @@ function Bookings() {
     const s = String(id);
     if (s.length <= 10) return s;
     return `${s.slice(0, 8)}...`;
+  };
+
+  // Keep only bookings that haven't expired (end > now) and sort by end desc (latest end first)
+  const filterAndSortBookings = (arr) => {
+    if (!Array.isArray(arr)) return [];
+    const nowTs = Date.now();
+    const parsed = arr
+      .map((b) => ({
+        ...b,
+        _endTs: (() => {
+          try {
+            if (b.end == null) return null;
+            if (typeof b.end === 'number' && Number.isFinite(b.end)) return Number(b.end);
+            if (b.end instanceof Date) return b.end.getTime();
+            const t = Date.parse(String(b.end));
+            return Number.isFinite(t) ? t : null;
+          } catch (e) {
+            return null;
+          }
+        })()
+      }))
+      // remove entries that have an end timestamp that is in the past
+      .filter((b) => (b._endTs === null ? true : b._endTs > nowTs))
+      // sort by end timestamp descending (latest end first). Keep items with null _endTs at the end
+      .sort((a, b) => {
+        if (a._endTs === null && b._endTs === null) return 0;
+        if (a._endTs === null) return 1;
+        if (b._endTs === null) return -1;
+        return b._endTs - a._endTs;
+      })
+      // remove helper property
+      .map(({ _endTs, ...rest }) => rest);
+
+    return parsed;
   };
 
   // Map status to the project's chip token (colors/icons/labels)
