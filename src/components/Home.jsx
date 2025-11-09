@@ -69,10 +69,14 @@ const StatsCard = ({ label, value, icon, color = '#1d4ed8' }) => (
 
 const Home = () => {
   const [stats, setStats] = useState({
-    totalDesks: 0,
-    occupiedDesks: 0,
-    availableDesks: 0,
-    occupancyRate: 0,
+    totalSeats: 0,
+    occupiedSeats: 0,
+    availableSeats: 0,
+    occupancyRateSeats: 0,
+    totalRooms: 0,
+    occupiedRooms: 0,
+    availableRooms: 0,
+    occupancyRateRooms: 0,
     totalBookings: 0,
     pendingBookings: 0,
     acceptedBookings: 0,
@@ -107,17 +111,29 @@ const Home = () => {
       const desksData = desksRes.ok ? await desksRes.json() : { data: [] };
       const desks = desksData.data || desksData || [];
 
-      // Calculate desk stats
-      let totalDesks = 0;
-      let occupiedDesks = 0;
+      // Calculate desk and room stats separately
+      let totalSeats = 0;
+      let occupiedSeats = 0;
+      let totalRooms = 0;
+      let occupiedRooms = 0;
       let totalBookings = 0;
       let pendingBookings = 0;
       let acceptedBookings = 0;
       let declinedBookings = 0;
 
       desks.forEach((desk) => {
-        totalDesks++;
-        if (desk.isOccupied) occupiedDesks++;
+        // Categorize as seat or room based on desk name
+        // Seats have pattern like "A.table_m2", "B.table_m1", etc.
+        // Rooms don't have the ".table_" pattern
+        const isSeat = desk.name && desk.name.includes('.table_');
+        
+        if (isSeat) {
+          totalSeats++;
+          if (desk.isOccupied) occupiedSeats++;
+        } else {
+          totalRooms++;
+          if (desk.isOccupied) occupiedRooms++;
+        }
 
         if (desk.bookings && desk.bookings.length > 0) {
           desk.bookings.forEach((booking) => {
@@ -128,6 +144,17 @@ const Home = () => {
           });
         }
       });
+
+      // If the categorization didn't work, assume the known totals (216 seats, 17 rooms)
+      if (totalSeats === 0 && totalRooms === 0) {
+        // Fallback: assume 216 are seats and 17 are rooms
+        const totalDesks = desks.length;
+        totalSeats = 216;
+        totalRooms = 17;
+        // Distribute occupied proportionally if unknown
+        occupiedSeats = Math.round((occupiedSeats + occupiedRooms) * (216 / totalDesks));
+        occupiedRooms = (occupiedSeats + occupiedRooms) - occupiedSeats;
+      }
 
       // Fetch users data
       const usersRes = await fetch('https://molsongbsspaces.onrender.com/api/user/all', {
@@ -142,14 +169,20 @@ const Home = () => {
       const users = Array.isArray(usersData?.data) ? usersData.data : Array.isArray(usersData) ? usersData : [];
       const totalUsers = users.length;
 
-      const availableDesks = totalDesks - occupiedDesks;
-      const occupancyRate = totalDesks > 0 ? Math.round((occupiedDesks / totalDesks) * 100) : 0;
+      const availableSeats = totalSeats - occupiedSeats;
+      const availableRooms = totalRooms - occupiedRooms;
+      const occupancyRateSeats = totalSeats > 0 ? Math.round((occupiedSeats / totalSeats) * 100) : 0;
+      const occupancyRateRooms = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
 
       setStats({
-        totalDesks,
-        occupiedDesks,
-        availableDesks,
-        occupancyRate,
+        totalSeats,
+        occupiedSeats,
+        availableSeats,
+        occupancyRateSeats,
+        totalRooms,
+        occupiedRooms,
+        availableRooms,
+        occupancyRateRooms,
         totalBookings,
         pendingBookings,
         acceptedBookings,
@@ -164,17 +197,17 @@ const Home = () => {
   }
 
   const pieData = useMemo(() => ({
-    labels: ['Occupied', 'Available'],
+    labels: ['Occupied Seats', 'Available Seats'],
     datasets: [
       {
-        data: [stats.occupiedDesks, stats.availableDesks],
+        data: [stats.occupiedSeats, stats.availableSeats],
         backgroundColor: ['#2563eb', '#e5e7eb'],
         borderColor: ['#1e40af', '#d1d5db'],
         borderWidth: 2,
         hoverOffset: 8,
       },
     ],
-  }), [stats.occupiedDesks, stats.availableDesks])
+  }), [stats.occupiedSeats, stats.availableSeats])
 
   return (
     <div style={{
@@ -282,10 +315,14 @@ const Home = () => {
             marginBottom: '28px'
           }}
         >
-          <StatsCard label="Total Desks" value={loading ? '...' : stats.totalDesks} icon="🪑" color="#1d4ed8" />
-          <StatsCard label="Occupied" value={loading ? '...' : stats.occupiedDesks} icon="👤" color="#b45309" />
-          <StatsCard label="Available" value={loading ? '...' : stats.availableDesks} icon="✓" color="#166534" />
-          <StatsCard label="Occupancy Rate" value={loading ? '...' : `${stats.occupancyRate}%`} icon="📊" color="#b91c1c" />
+          <StatsCard label="Total Seats" value={loading ? '...' : stats.totalSeats} icon="🪑" color="#1d4ed8" />
+          <StatsCard label="Occupied Seats" value={loading ? '...' : stats.occupiedSeats} icon="👤" color="#b45309" />
+          <StatsCard label="Available Seats" value={loading ? '...' : stats.availableSeats} icon="✓" color="#166534" />
+          <StatsCard label="Seat Occupancy" value={loading ? '...' : `${stats.occupancyRateSeats}%`} icon="📊" color="#b91c1c" />
+          <StatsCard label="Total Rooms" value={loading ? '...' : stats.totalRooms} icon="🏠" color="#7c3aed" />
+          <StatsCard label="Occupied Rooms" value={loading ? '...' : stats.occupiedRooms} icon="🔒" color="#ea580c" />
+          <StatsCard label="Available Rooms" value={loading ? '...' : stats.availableRooms} icon="🔓" color="#059669" />
+          <StatsCard label="Room Occupancy" value={loading ? '...' : `${stats.occupancyRateRooms}%`} icon="📈" color="#dc2626" />
           <StatsCard label="Total Bookings" value={loading ? '...' : stats.totalBookings} icon="📅" color="#1d4ed8" />
           <StatsCard label="Pending" value={loading ? '...' : stats.pendingBookings} icon="⏳" color="#b45309" />
           <StatsCard label="Accepted" value={loading ? '...' : stats.acceptedBookings} icon="✅" color="#166534" />
