@@ -68,6 +68,7 @@ const StatsCard = ({ label, value, icon, color = '#1d4ed8' }) => (
 )
 
 const Home = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const [stats, setStats] = useState({
     totalSeats: 0,
     occupiedSeats: 0,
@@ -84,6 +85,14 @@ const Home = () => {
     totalUsers: 0
   });
   const [loading, setLoading] = useState(true);
+
+  // Track screen size for responsive design
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Fetch statistics from API
@@ -237,9 +246,11 @@ const Home = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%)',
-      padding: '20px 16px 24px',
+      padding: isMobile ? '16px 12px 20px' : '20px 16px 24px',
       position: 'relative',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
       <div style={{
         position: 'absolute',
@@ -274,7 +285,10 @@ const Home = () => {
         margin: '0 auto',
         position: 'relative',
         zIndex: 1,
-        width: '100%'
+        width: '100%',
+        boxSizing: 'border-box',
+        paddingLeft: isMobile ? '0' : '0',
+        paddingRight: isMobile ? '0' : '0'
       }}>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -334,9 +348,11 @@ const Home = () => {
           transition={{ delay: 0.2 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '20px',
-            marginBottom: '28px'
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: isMobile ? '12px' : '20px',
+            marginBottom: isMobile ? '20px' : '28px',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
           <StatsCard label="Total Seats" value={loading ? '...' : stats.totalSeats} icon="🪑" color="#1d4ed8" />
@@ -346,7 +362,13 @@ const Home = () => {
           <StatsCard label="Declined Bookings" value={loading ? '...' : stats.declinedBookings} icon="❌" color="#dc2626" />
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: isMobile ? '16px' : '24px',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -355,8 +377,11 @@ const Home = () => {
               background: 'linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98))',
               border: '1px solid rgba(148, 163, 184, 0.25)',
               borderRadius: '18px',
-              padding: '20px 24px',
-              boxShadow: '0 14px 32px rgba(15, 23, 42, 0.1)'
+              padding: isMobile ? '16px 14px' : '20px 24px',
+              boxShadow: '0 14px 32px rgba(15, 23, 42, 0.1)',
+              width: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
             }}
           >
             <div style={{ marginBottom: '16px' }}>

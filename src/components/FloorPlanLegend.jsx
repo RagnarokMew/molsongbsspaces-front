@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const FloorPlanLegend = ({ currentTime }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -26,8 +34,8 @@ const FloorPlanLegend = ({ currentTime }) => {
       style={{
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
         borderRadius: '16px',
-        padding: '20px 24px',
-        marginBottom: '24px',
+        padding: isMobile ? '16px 14px' : '20px 24px',
+        marginBottom: isMobile ? '16px' : '24px',
         boxShadow: '0 4px 20px rgba(0, 103, 172, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)',
         border: '1px solid rgba(0, 103, 172, 0.1)',
         position: 'relative',
@@ -51,8 +59,9 @@ const FloorPlanLegend = ({ currentTime }) => {
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: '10px',
-        marginBottom: '16px'
+        gap: isMobile ? '8px' : '10px',
+        marginBottom: isMobile ? '12px' : '16px',
+        flexWrap: 'wrap'
       }}>
         <motion.div
           animate={{ 
@@ -73,10 +82,11 @@ const FloorPlanLegend = ({ currentTime }) => {
         />
         <h3
           style={{
-            fontSize: '15px',
+            fontSize: isMobile ? '13px' : '15px',
             fontWeight: '700',
             color: '#0f172a',
-            letterSpacing: '-0.3px'
+            letterSpacing: '-0.3px',
+            margin: 0
           }}
         >
           {currentTime.toLocaleTimeString()} • {currentTime.toLocaleDateString()}
@@ -84,16 +94,16 @@ const FloorPlanLegend = ({ currentTime }) => {
       </div>
 
       {/* Legend items with modern cards */}
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: isMobile ? '10px' : '16px', flexWrap: 'wrap' }}>
         <motion.div 
           variants={itemVariants}
           whileHover={{ scale: 1.05, y: -2 }}
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
+            gap: isMobile ? '8px' : '10px',
             background: 'linear-gradient(135deg, #ecfdf5, #d1fae5)',
-            padding: '8px 14px',
+            padding: isMobile ? '6px 12px' : '8px 14px',
             borderRadius: '10px',
             border: '1px solid #86efac',
             boxShadow: '0 2px 8px rgba(16, 185, 129, 0.1)'
@@ -101,14 +111,14 @@ const FloorPlanLegend = ({ currentTime }) => {
         >
           <div
             style={{
-              width: '22px',
-              height: '22px',
+              width: isMobile ? '18px' : '22px',
+              height: isMobile ? '18px' : '22px',
               background: 'linear-gradient(135deg, #10b981, #059669)',
               borderRadius: '6px',
               boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
             }}
           />
-          <span style={{ fontSize: '13px', color: '#065f46', fontWeight: '600' }}>Available</span>
+          <span style={{ fontSize: isMobile ? '12px' : '13px', color: '#065f46', fontWeight: '600' }}>Available</span>
         </motion.div>
 
         <motion.div 
@@ -117,9 +127,9 @@ const FloorPlanLegend = ({ currentTime }) => {
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
+            gap: isMobile ? '8px' : '10px',
             background: 'linear-gradient(135deg, #fef2f2, #fee2e2)',
-            padding: '8px 14px',
+            padding: isMobile ? '6px 12px' : '8px 14px',
             borderRadius: '10px',
             border: '1px solid #fca5a5',
             boxShadow: '0 2px 8px rgba(239, 68, 68, 0.1)'
@@ -127,14 +137,14 @@ const FloorPlanLegend = ({ currentTime }) => {
         >
           <div
             style={{
-              width: '22px',
-              height: '22px',
+              width: isMobile ? '18px' : '22px',
+              height: isMobile ? '18px' : '22px',
               background: 'linear-gradient(135deg, #ef4444, #dc2626)',
               borderRadius: '6px',
               boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
             }}
           />
-          <span style={{ fontSize: '13px', color: '#991b1b', fontWeight: '600' }}>Booked</span>
+          <span style={{ fontSize: isMobile ? '12px' : '13px', color: '#991b1b', fontWeight: '600' }}>Booked</span>
         </motion.div>
 
         <motion.div 
@@ -143,9 +153,9 @@ const FloorPlanLegend = ({ currentTime }) => {
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
+            gap: isMobile ? '8px' : '10px',
             background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-            padding: '8px 14px',
+            padding: isMobile ? '6px 12px' : '8px 14px',
             borderRadius: '10px',
             border: '1px solid #fbbf24',
             boxShadow: '0 2px 8px rgba(245, 158, 11, 0.1)'
@@ -153,14 +163,14 @@ const FloorPlanLegend = ({ currentTime }) => {
         >
           <div
             style={{
-              width: '22px',
-              height: '22px',
+              width: isMobile ? '18px' : '22px',
+              height: isMobile ? '18px' : '22px',
               background: 'linear-gradient(135deg, #f59e0b, #d97706)',
               borderRadius: '6px',
               boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
             }}
           />
-          <span style={{ fontSize: '13px', color: '#92400e', fontWeight: '600' }}>Pending</span>
+          <span style={{ fontSize: isMobile ? '12px' : '13px', color: '#92400e', fontWeight: '600' }}>Pending</span>
         </motion.div>
       </div>
 

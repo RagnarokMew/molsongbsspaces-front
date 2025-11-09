@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskStatus = 'available', isLiveMode = true }) => {
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [bookingData, setBookingData] = useState({
     section: section,
     deskId: deskId,
@@ -10,6 +11,13 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
     startTime: '09:00',
     endTime: '17:00'
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,7 +68,7 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '20px'
+          padding: isMobile ? '16px' : '20px'
         }}
         onClick={onClose}
       >
@@ -73,12 +81,13 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
           style={{
             background: 'white',
             borderRadius: '16px',
-            padding: '30px',
+            padding: isMobile ? '20px 16px' : '30px',
             maxWidth: '500px',
             width: '100%',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-            maxHeight: '90vh',
-            overflow: 'auto'
+            maxHeight: isMobile ? '95vh' : '90vh',
+            overflow: 'auto',
+            boxSizing: 'border-box'
           }}
         >
           {/* Header */}
@@ -86,12 +95,12 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '20px',
-            paddingBottom: '15px',
+            marginBottom: isMobile ? '16px' : '20px',
+            paddingBottom: isMobile ? '12px' : '15px',
             borderBottom: '2px solid #f0f0f0'
           }}>
             <h2 style={{
-              fontSize: '24px',
+              fontSize: isMobile ? '20px' : '24px',
               fontWeight: 'bold',
               color: '#0067AC',
               margin: 0
@@ -195,8 +204,8 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
             {/* Time Selection */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '15px',
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              gap: isMobile ? '12px' : '15px',
               marginBottom: '20px'
             }}>
               <div>
@@ -269,22 +278,24 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
             {/* Action Buttons */}
             <div style={{
               display: 'flex',
-              gap: '10px',
-              justifyContent: 'flex-end'
+              gap: isMobile ? '8px' : '10px',
+              justifyContent: isMobile ? 'stretch' : 'flex-end',
+              flexDirection: isMobile ? 'column' : 'row'
             }}>
               <button
                 type="button"
                 onClick={onClose}
                 style={{
-                  padding: '12px 24px',
+                  padding: isMobile ? '10px 16px' : '12px 24px',
                   border: '2px solid #e0e0e0',
                   borderRadius: '8px',
                   background: 'white',
                   color: '#666',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  flex: isMobile ? '1' : 'auto'
                 }}
                 onMouseEnter={(e) => {
                   e.target.style.background = '#f5f5f5';
@@ -302,16 +313,17 @@ const BookingModal = ({ section, currentTime, onClose, onConfirm, deskId, deskSt
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 style={{
-                  padding: '12px 32px',
+                  padding: isMobile ? '10px 16px' : '12px 32px',
                   border: 'none',
                   borderRadius: '8px',
                   background: 'linear-gradient(135deg, #0067AC 0%, #002147 100%)',
                   color: 'white',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   boxShadow: '0 4px 12px rgba(0, 103, 172, 0.3)',
-                  transition: 'box-shadow 0.2s'
+                  transition: 'box-shadow 0.2s',
+                  flex: isMobile ? '1' : 'auto'
                 }}
                 onMouseEnter={(e) => {
                   e.target.style.boxShadow = '0 6px 20px rgba(0, 103, 172, 0.4)';

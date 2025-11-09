@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 function Register() {
+  const [isMobile, setIsMobile] = useState(false);
   const [form, setForm] = useState({
     name: '',
     username: '',
@@ -16,6 +17,14 @@ function Register() {
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState('');
+
+  // Track screen size for responsive design
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -174,27 +183,31 @@ function Register() {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%)',
-        padding: '48px 24px'
+        padding: isMobile ? '24px 12px' : '48px 24px',
+        overflow: 'hidden',
+        width: '100%'
       }}
     >
       <div
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          position: 'relative'
+          position: 'relative',
+          width: '100%',
+          boxSizing: 'border-box'
         }}
       >
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          style={{ marginBottom: '32px' }}
+          style={{ marginBottom: isMobile ? '20px' : '32px' }}
         >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '18px',
+              gap: isMobile ? '12px' : '18px',
               flexWrap: 'wrap'
             }}
           >
@@ -205,10 +218,11 @@ function Register() {
                 background: 'linear-gradient(135deg, #0067AC, #1d4ed8)',
                 borderRadius: '14px',
                 padding: '14px',
-                boxShadow: '0 10px 25px rgba(30, 64, 175, 0.25)'
+                boxShadow: '0 10px 25px rgba(30, 64, 175, 0.25)',
+                flexShrink: 0
               }}
             >
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <svg width={isMobile ? '24' : '30'} height={isMobile ? '24' : '30'} viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
                   stroke="#bfdbfe"
@@ -228,7 +242,7 @@ function Register() {
             <div>
               <h1
                 style={{
-                  fontSize: '34px',
+                  fontSize: isMobile ? '24px' : '34px',
                   fontWeight: '800',
                   background: 'linear-gradient(135deg, #0f172a, #1d4ed8)',
                   WebkitBackgroundClip: 'text',
@@ -244,7 +258,7 @@ function Register() {
                 style={{
                   color: '#475569',
                   margin: '6px 0 0 0',
-                  fontSize: '16px',
+                  fontSize: isMobile ? '13px' : '16px',
                   fontWeight: '500'
                 }}
               >
@@ -257,7 +271,9 @@ function Register() {
         <div
           style={{
             display: 'grid',
-            gap: '28px'
+            gap: isMobile ? '18px' : '28px',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
           <motion.div
@@ -268,14 +284,15 @@ function Register() {
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.95))',
               border: '1px solid rgba(148, 163, 184, 0.25)',
               borderRadius: '18px',
-              padding: '26px 28px 30px',
+              padding: isMobile ? '20px 16px' : '26px 28px 30px',
               width: '100%',
+              boxSizing: 'border-box',
               boxShadow: '0 18px 40px rgba(15, 23, 42, 0.12)'
             }}
           >
             <h2
               style={{
-                fontSize: '20px',
+                fontSize: isMobile ? '18px' : '20px',
                 color: '#0f172a',
                 margin: '0 0 16px 0',
                 fontWeight: '700'
@@ -318,14 +335,14 @@ function Register() {
               onSubmit={handleSubmit}
               style={{
                 display: 'grid',
-                gap: '16px'
+                gap: isMobile ? '12px' : '16px'
               }}
             >
               <div
                 style={{
                   display: 'grid',
-                  gap: '14px',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))'
+                  gap: isMobile ? '12px' : '14px',
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(220px, 1fr))'
                 }}
               >
                 <input
@@ -334,12 +351,13 @@ function Register() {
                   value={form.name}
                   onChange={handleChange}
                   style={{
-                    padding: '12px 14px',
+                    padding: isMobile ? '11px 12px' : '12px 14px',
                     borderRadius: '12px',
                     border: '1px solid rgba(148, 163, 184, 0.35)',
                     background: 'rgba(255, 255, 255, 0.75)',
                     color: '#0f172a',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontSize: isMobile ? '14px' : '16px'
                   }}
                 />
                 <input
@@ -348,12 +366,13 @@ function Register() {
                   value={form.username}
                   onChange={handleChange}
                   style={{
-                    padding: '12px 14px',
+                    padding: isMobile ? '11px 12px' : '12px 14px',
                     borderRadius: '12px',
                     border: '1px solid rgba(148, 163, 184, 0.35)',
                     background: 'rgba(255, 255, 255, 0.75)',
                     color: '#0f172a',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontSize: isMobile ? '14px' : '16px'
                   }}
                 />
                 <input
@@ -363,12 +382,13 @@ function Register() {
                   value={form.email}
                   onChange={handleChange}
                   style={{
-                    padding: '12px 14px',
+                    padding: isMobile ? '11px 12px' : '12px 14px',
                     borderRadius: '12px',
                     border: '1px solid rgba(148, 163, 184, 0.35)',
                     background: 'rgba(255, 255, 255, 0.75)',
                     color: '#0f172a',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontSize: isMobile ? '14px' : '16px'
                   }}
                 />
                 <input
@@ -378,12 +398,13 @@ function Register() {
                   value={form.password}
                   onChange={handleChange}
                   style={{
-                    padding: '12px 14px',
+                    padding: isMobile ? '11px 12px' : '12px 14px',
                     borderRadius: '12px',
                     border: '1px solid rgba(148, 163, 184, 0.35)',
                     background: 'rgba(255, 255, 255, 0.75)',
                     color: '#0f172a',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontSize: isMobile ? '14px' : '16px'
                   }}
                 />
                 <input
@@ -393,12 +414,13 @@ function Register() {
                   value={form.confirmPassword}
                   onChange={handleChange}
                   style={{
-                    padding: '12px 14px',
+                    padding: isMobile ? '11px 12px' : '12px 14px',
                     borderRadius: '12px',
                     border: '1px solid rgba(148, 163, 184, 0.35)',
                     background: 'rgba(255, 255, 255, 0.75)',
                     color: '#0f172a',
-                    fontWeight: '500'
+                    fontWeight: '500',
+                    fontSize: isMobile ? '14px' : '16px'
                   }}
                 />
               </div>
@@ -435,8 +457,11 @@ function Register() {
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(241, 245, 249, 0.98))',
               border: '1px solid rgba(148, 163, 184, 0.2)',
               borderRadius: '18px',
-              padding: '24px',
-              boxShadow: '0 20px 42px rgba(15, 23, 42, 0.12)'
+              padding: isMobile ? '18px 16px' : '24px',
+              width: '100%',
+              boxSizing: 'border-box',
+              boxShadow: '0 20px 42px rgba(15, 23, 42, 0.12)',
+              overflow: 'hidden'
             }}
           >
             <div
@@ -445,14 +470,15 @@ function Register() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
-                gap: '12px',
-                marginBottom: '18px'
+                gap: isMobile ? '12px' : '12px',
+                marginBottom: '18px',
+                flexDirection: isMobile ? 'column' : 'row'
               }}
             >
               <div>
                 <h2
                   style={{
-                    fontSize: '20px',
+                    fontSize: isMobile ? '18px' : '20px',
                     color: '#0f172a',
                     margin: '0 0 4px 0',
                     fontWeight: '700'
@@ -476,7 +502,7 @@ function Register() {
                 whileTap={{ scale: 0.98 }}
                 disabled={usersLoading}
                 style={{
-                  padding: '8px 16px',
+                  padding: isMobile ? '10px 16px' : '8px 16px',
                   borderRadius: '999px',
                   border: '1px solid rgba(37, 99, 235, 0.25)',
                   background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
@@ -484,7 +510,9 @@ function Register() {
                   fontWeight: '600',
                   cursor: usersLoading ? 'not-allowed' : 'pointer',
                   boxShadow: '0 10px 20px rgba(59, 130, 246, 0.1)',
-                  opacity: usersLoading ? 0.7 : 1
+                  opacity: usersLoading ? 0.7 : 1,
+                  fontSize: isMobile ? '13px' : '14px',
+                  width: isMobile ? '100%' : 'auto'
                 }}
               >
                 {usersLoading ? 'Refreshing...' : 'Refresh list'}
@@ -511,14 +539,17 @@ function Register() {
                 overflowX: 'auto',
                 borderRadius: '14px',
                 border: '1px solid rgba(148, 163, 184, 0.2)',
-                background: 'rgba(248, 250, 252, 0.85)'
+                background: 'rgba(248, 250, 252, 0.85)',
+                WebkitOverflowScrolling: 'touch',
+                width: '100%',
+                maxWidth: '100%'
               }}
             >
               <table
                 style={{
                   width: '100%',
                   borderCollapse: 'collapse',
-                  minWidth: '720px'
+                  minWidth: isMobile ? '520px' : '100%'
                 }}
               >
                 <thead>
@@ -529,24 +560,24 @@ function Register() {
                       textAlign: 'left'
                     }}
                   >
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Name</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Username</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Email</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Role</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Created</th>
-                    <th style={{ padding: '14px 16px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>ID</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>Name</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>Username</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>Email</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>Role</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>Created</th>
+                    <th style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '12px', textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: '700', whiteSpace: 'nowrap' }}>ID</th>
                   </tr>
                 </thead>
                 <tbody>
                   {usersLoading && tableRows.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>
+                      <td colSpan={6} style={{ padding: isMobile ? '12px' : '20px', textAlign: 'center', color: '#64748b', fontSize: isMobile ? '12px' : '14px' }}>
                         Loading users...
                       </td>
                     </tr>
                   ) : tableRows.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>
+                      <td colSpan={6} style={{ padding: isMobile ? '12px' : '20px', textAlign: 'center', color: '#94a3b8', fontSize: isMobile ? '12px' : '14px' }}>
                         No users found.
                       </td>
                     </tr>
@@ -559,33 +590,34 @@ function Register() {
                           background: 'rgba(255, 255, 255, 0.7)'
                         }}
                       >
-                        <td style={{ padding: '14px 16px', fontSize: '14px', color: '#0f172a', fontWeight: '600' }}>{user.name}</td>
-                        <td style={{ padding: '14px 16px', fontSize: '14px', color: '#1e293b' }}>{user.username}</td>
-                        <td style={{ padding: '14px 16px', fontSize: '14px', color: '#1e293b' }}>{user.email}</td>
-                        <td style={{ padding: '14px 16px' }}>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '11px' : '14px', color: '#0f172a', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</td>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '11px' : '14px', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.username}</td>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '11px' : '14px', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</td>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', whiteSpace: 'nowrap' }}>
                           <span
                             style={{
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '6px',
-                              padding: '6px 12px',
+                              gap: '4px',
+                              padding: isMobile ? '4px 8px' : '6px 12px',
                               borderRadius: '999px',
                               background: user.role === 'admin'
                                 ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(37, 99, 235, 0.18))'
                                 : 'linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(22, 163, 74, 0.18))',
                               color: user.role === 'admin' ? '#1d4ed8' : '#166534',
-                              fontSize: '12px',
+                              fontSize: isMobile ? '10px' : '12px',
                               fontWeight: '600',
                               border: user.role === 'admin'
                                 ? '1px solid rgba(37, 99, 235, 0.24)'
-                                : '1px solid rgba(22, 163, 74, 0.24)'
+                                : '1px solid rgba(22, 163, 74, 0.24)',
+                              whiteSpace: 'nowrap'
                             }}
                           >
                             {user.role === 'admin' ? 'Admin' : 'User'}
                           </span>
                         </td>
-                        <td style={{ padding: '14px 16px', fontSize: '13px', color: '#475569' }}>{formatDateTime(user.createdAt)}</td>
-                        <td style={{ padding: '14px 16px', fontFamily: 'monospace', fontSize: '13px', color: '#64748b' }}>{formatUserToken(user.id)}</td>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontSize: isMobile ? '10px' : '13px', color: '#475569', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{formatDateTime(user.createdAt)}</td>
+                        <td style={{ padding: isMobile ? '10px 8px' : '14px 16px', fontFamily: 'monospace', fontSize: isMobile ? '10px' : '13px', color: '#64748b', whiteSpace: 'nowrap' }}>{formatUserToken(user.id)}</td>
                       </tr>
                     ))
                   )}
