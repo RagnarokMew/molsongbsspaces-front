@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm, deskId }) => {
+const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm, deskId, deskStatus = 'available' }) => {
   const [bookingData, setBookingData] = useState({
     section: section,
     deskId: deskId,
@@ -118,8 +118,8 @@ const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm, d
             padding: '15px',
             borderRadius: '8px',
             marginBottom: '20px',
-            background: isAvailable ? '#E8F5E9' : '#FFEBEE',
-            border: `1px solid ${isAvailable ? '#4CAF50' : '#ef4444'}`
+            background: deskStatus === 'available' ? '#E8F5E9' : deskStatus === 'pending' ? '#FEF3C7' : '#FFEBEE',
+            border: `1px solid ${deskStatus === 'available' ? '#4CAF50' : deskStatus === 'pending' ? '#fbbf24' : '#ef4444'}`
           }}>
             <div style={{
               display: 'flex',
@@ -127,14 +127,16 @@ const BookingModal = ({ section, isAvailable, currentTime, onClose, onConfirm, d
               gap: '10px',
               fontSize: '14px',
               fontWeight: 'bold',
-              color: isAvailable ? '#2E7D32' : '#C62828'
+              color: deskStatus === 'available' ? '#2E7D32' : deskStatus === 'pending' ? '#92400e' : '#C62828'
             }}>
               <span style={{ fontSize: '20px' }}>
-                {isAvailable ? '✓' : '✗'}
+                {deskStatus === 'available' ? '✓' : deskStatus === 'pending' ? '⏳' : '✗'}
               </span>
               <span>
-                {isAvailable 
+                {deskStatus === 'available'
                   ? `Available now (${currentTime.toLocaleTimeString()})`
+                  : deskStatus === 'pending'
+                  ? 'Pending approval - Select a different time or wait for approval'
                   : 'Currently booked - Select a different time'}
               </span>
             </div>

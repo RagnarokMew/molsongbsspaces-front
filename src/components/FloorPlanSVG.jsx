@@ -96,6 +96,15 @@ const FloorPlanSVG = () => {
         const desksData = data.data || data;
         setDesks(Array.isArray(desksData) ? desksData : []);
         console.log(`✅ Loaded ${Array.isArray(desksData) ? desksData.length : 0} desks`);
+        
+        // Log desks with bookings for debugging
+        const desksWithBookings = desksData.filter(d => d.bookings && d.bookings.length > 0);
+        console.log(`📋 Desks with bookings (${desksWithBookings.length}):`, desksWithBookings.map(d => ({
+          id: d.id,
+          locationId: d.locationId,
+          name: d.name,
+          bookings: d.bookings
+        })));
       } catch (error) {
         console.error('❌ Error fetching desks:', error);
         setDesks([]);
@@ -563,6 +572,125 @@ const FloorPlanSVG = () => {
     return true; // Available if no active attendance or booking
   };
 
+  // Get booking status for a desk (available, booked, pending)
+  const getDeskStatus = (deskId) => {
+    if (loadingDesks) return 'available';
+    
+    const desk = desks.find(d => {
+      if (d.name === deskId || d.id === deskId || d._id === deskId) return true;
+      if (d.locationId === deskId) return true;
+      return false;
+    });
+    
+    if (!desk) {
+      // Only log for table desks, not sections
+      if (deskId.includes('Table')) {
+        console.log(`⚠️ Desk not found in backend data: ${deskId}`);
+        console.log(`Available desk IDs:`, desks.map(d => ({id: d.id, locationId: d.locationId, name: d.name})).slice(0, 5));
+      }
+      return 'available';
+    }
+
+    const now = new Date();
+    console.log(`🔍 Checking status for ${deskId} (matched desk: ${desk.locationId || desk.id}) at ${now.toLocaleTimeString()}`);
+    
+    // Check bookings - ANY booking where current time is within the time slot
+    if (desk.bookings && desk.bookings.length > 0) {
+      console.log(`📋 Found ${desk.bookings.length} booking(s) for ${deskId}:`, desk.bookings);
+      
+      for (const booking of desk.bookings) {
+        // Skip declined bookings - they don't affect availability
+        if (booking.status === 'declined') {
+          console.log(`  Skipping declined booking`);
+          continue;
+        }
+
+        const bookingStart = new Date(booking.start);
+        const bookingEnd = new Date(booking.end);
+        const isWithinTime = now >= bookingStart && now <= bookingEnd;
+        
+        console.log(`  Booking: ${bookingStart.toISOString()} - ${bookingEnd.toISOString()}`);
+        console.log(`  Current: ${now.toISOString()}`);
+        console.log(`  Status: ${booking.status}, Within time: ${isWithinTime}`);
+        console.log(`  Comparison: now(${now.getTime()}) >= start(${bookingStart.getTime()}) && now <= end(${bookingEnd.getTime()})`);
+        
+        // Only check bookings in the current timeframe
+        if (isWithinTime) {
+          // Pending booking → desk shows as "pending"
+          if (booking.status === 'pending') {
+            console.log(`  ⏳ PENDING - Booking awaiting approval`);
+            return 'pending';
+          }
+          // Accepted booking in current timeframe → desk is "booked" (unavailable)
+          if (booking.status === 'accepted') {
+            console.log(`  🔴 BOOKED - Accepted booking is active now`);
+            return 'booked';
+          }
+        } else {
+          console.log(`  ⏭️ Booking outside current timeframe - doesn't affect availability`);
+        }
+      }
+    }
+    
+    // Check attendances (for legacy/active check-ins)
+    if (desk.attendances && desk.attendances.length > 0) {
+      console.log(`📋 Checking ${desk.attendances.length} attendances for ${deskId}`);
+      
+      for (const attendance of desk.attendances) {
+        if (attendance.status === 'completed') continue;
+        
+        const attendanceStart = new Date(attendance.start);
+        
+        if (attendance.end) {
+          const attendanceEnd = new Date(attendance.end);
+          const isWithinTime = now >= attendanceStart && now <= attendanceEnd;
+          
+          console.log(`  Attendance: ${attendanceStart.toISOString()} - ${attendanceEnd.toISOString()}`);
+          console.log(`  Status: ${attendance.status}, Within time: ${isWithinTime}`);
+          
+          if (isWithinTime) {
+            if (attendance.status === 'pending') {
+              console.log(`  ⚠️ PENDING attendance found`);
+              return 'pending';
+            }
+            if (attendance.status === 'active') {
+              console.log(`  🔴 BOOKED (active attendance)`);
+              return 'booked';
+            }
+          }
+        } else {
+          // No end time - if start is in the past and status is active
+          if (now >= attendanceStart && attendance.status === 'active') {
+            console.log(`  🔴 BOOKED (active attendance without end time)`);
+            return 'booked';
+          }
+          if (attendance.status === 'pending') {
+            console.log(`  ⚠️ PENDING attendance (no end time)`);
+            return 'pending';
+          }
+        }
+      }
+    }
+
+    console.log(`  ✅ AVAILABLE - No active bookings in current timeframe`);
+    return 'available';
+  };
+
+  // Get color based on desk status
+  const getDeskColor = (deskId) => {
+    const status = getDeskStatus(deskId);
+    
+    switch (status) {
+      case 'booked':
+        return '#ef4444'; // Red - occupied/booked
+      case 'pending':
+        return '#f59e0b'; // Orange/Yellow - pending approval
+      case 'available':
+      default:
+        return '#10b981'; // Green - available
+    }
+  };
+
   // Legacy function for sections (non-table areas)
   const isAvailable = (sectionName) => {
     // For individual tables, use the new desk availability check
@@ -782,16 +910,24 @@ const FloorPlanSVG = () => {
         endDate = nextDay.toISOString().split('T')[0];
       }
       
-      const startDateTime = `${startDate}T${bookingData.startTime}:00Z`;
-      const endDateTime = `${endDate}T${bookingData.endTime}:00Z`;
+      // Create datetime in LOCAL timezone, then convert to ISO (UTC)
+      // This ensures "02:00" in your local time is correctly converted to UTC
+      const [startH, startM] = bookingData.startTime.split(':').map(Number);
+      const [endH, endM] = bookingData.endTime.split(':').map(Number);
+      
+      const startDateObj = new Date(startDate);
+      startDateObj.setHours(startH, startM, 0, 0);
+      
+      const endDateObj = new Date(endDate);
+      endDateObj.setHours(endH, endM, 0, 0);
+      
+      const startDateTime = startDateObj.toISOString();
+      const endDateTime = endDateObj.toISOString();
 
-      console.log("📅 Start datetime:", startDateTime);
-      console.log("📅 End datetime:", endDateTime);
+      console.log("📅 Start datetime (local→UTC):", startDateTime);
+      console.log("📅 End datetime (local→UTC):", endDateTime);
 
       // Validate that end time is after start time
-      const startDateObj = new Date(startDateTime);
-      const endDateObj = new Date(endDateTime);
-      
       if (endDateObj <= startDateObj) {
         alert('End time must be after start time!');
         return;
@@ -840,8 +976,9 @@ const FloorPlanSVG = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to book desk: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        console.error("❌ Backend error:", errorData);
+        throw new Error(errorData.message || errorData.error || `Failed to book desk: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
@@ -2638,8 +2775,8 @@ const FloorPlanSVG = () => {
                 y={table.y}
                 width={table.width}
                 height={table.height}
-                fill={getSectionColor(table.id)}
-                fillOpacity="0.3"
+                fill={getDeskColor(table.id)}
+                fillOpacity="0.5"
                 stroke={hoveredSection === table.id ? "#1a1a1a" : "transparent"}
                 strokeWidth="3"
                 style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -2657,8 +2794,8 @@ const FloorPlanSVG = () => {
                 y={table.y}
                 width={table.width}
                 height={table.height}
-                fill={getSectionColor(table.id)}
-                fillOpacity="0.3"
+                fill={getDeskColor(table.id)}
+                fillOpacity="0.5"
                 stroke={hoveredSection === table.id ? "#1a1a1a" : "transparent"}
                 strokeWidth="3"
                 style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -2967,7 +3104,8 @@ const FloorPlanSVG = () => {
               
               if (isTable) {
                 const deskInfo = getDeskInfo(hoveredSection);
-                const available = isAvailable(hoveredSection);
+                const deskStatus = getDeskStatus(hoveredSection); // 'available', 'booked', or 'pending'
+                const available = deskStatus === 'available';
                 
                 return (
                   <>
@@ -2999,22 +3137,36 @@ const FloorPlanSVG = () => {
                         display: 'inline-block',
                         padding: '6px 16px',
                         borderRadius: '8px',
-                        background: available 
+                        background: deskStatus === 'available'
                           ? 'linear-gradient(135deg, #ecfdf5, #d1fae5)' 
+                          : deskStatus === 'pending'
+                          ? 'linear-gradient(135deg, #fef3c7, #fde68a)'
                           : 'linear-gradient(135deg, #fef2f2, #fee2e2)',
-                        border: available ? '1px solid #86efac' : '1px solid #fca5a5',
+                        border: deskStatus === 'available' 
+                          ? '1px solid #86efac' 
+                          : deskStatus === 'pending'
+                          ? '1px solid #fbbf24'
+                          : '1px solid #fca5a5',
                         marginBottom: '12px'
                       }}
                     >
                       <p
                         style={{
                           fontSize: "15px",
-                          color: available ? "#065f46" : "#991b1b",
+                          color: deskStatus === 'available' 
+                            ? "#065f46" 
+                            : deskStatus === 'pending'
+                            ? "#92400e"
+                            : "#991b1b",
                           fontWeight: "700",
                           margin: 0
                         }}
                       >
-                        {available ? "✓ Available Now" : (deskInfo.isAttendance ? "✗ Currently Occupied" : "✗ Currently Booked")}
+                        {deskStatus === 'available' 
+                          ? "✓ Available Now" 
+                          : deskStatus === 'pending'
+                          ? "⏳ Pending Approval"
+                          : (deskInfo.isAttendance ? "✗ Currently Occupied" : "✗ Currently Booked")}
                       </p>
                     </div>
 
@@ -3144,7 +3296,8 @@ const FloorPlanSVG = () => {
         <BookingModal
           section={selectedSection}
           deskId={selectedSection}
-          isAvailable={isAvailable(selectedSection)}
+          isAvailable={getDeskStatus(selectedSection) === 'available'}
+          deskStatus={getDeskStatus(selectedSection)}
           currentTime={currentTime}
           onClose={handleCloseModal}
           onConfirm={handleBookingConfirm}

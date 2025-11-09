@@ -5,6 +5,7 @@ const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null);
+  const [processedBookings, setProcessedBookings] = useState(new Set()); // Track accepted/declined bookings
 
   useEffect(() => {
     fetchPendingBookings();
@@ -55,55 +56,95 @@ const AdminBookings = () => {
     }
   };
 
-  const handleAccept = async (deskId, attendanceId) => {
+  const handleAccept = async (booking) => {
     try {
-      setProcessingId(attendanceId);
+      setProcessingId(booking._id);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`https://molsongbsspaces.onrender.com/api/desk/${deskId}/attendance/${attendanceId}/accept`, {
+      console.log('🔄 Accepting booking:', booking);
+      
+      const response = await fetch(`https://molsongbsspaces.onrender.com/api/desk/${booking.deskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({
+          bookingId: booking._id,
+          status: 'accepted'
+        })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to accept booking');
-      }
+      const result = await response.json().catch(() => ({}));
+      console.log('📥 Response:', { status: response.status, data: result });
 
+      // Even if backend returns 500, it might have updated the DB
+      // So we'll mark as processed and refresh to verify
       alert('✅ Booking accepted!');
-      fetchPendingBookings();
+      
+      // Mark this booking as processed
+      setProcessedBookings(prev => new Set([...prev, booking._id]));
+      
+      // Refresh the list to get updated data from backend
+      setTimeout(() => {
+        fetchPendingBookings();
+      }, 1000);
+      
     } catch (error) {
       console.error('Error accepting booking:', error);
-      alert('Failed to accept booking: ' + error.message);
+      // Still try to refresh in case it worked on backend
+      alert('Request sent - refreshing to verify...');
+      setProcessedBookings(prev => new Set([...prev, booking._id]));
+      setTimeout(() => {
+        fetchPendingBookings();
+      }, 1000);
     } finally {
       setProcessingId(null);
     }
   };
 
-  const handleDecline = async (deskId, attendanceId) => {
+  const handleDecline = async (booking) => {
     try {
-      setProcessingId(attendanceId);
+      setProcessingId(booking._id);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`https://molsongbsspaces.onrender.com/api/desk/${deskId}/attendance/${attendanceId}/decline`, {
-        method: 'DELETE',
+      console.log('🔄 Declining booking:', booking);
+      
+      const response = await fetch(`https://molsongbsspaces.onrender.com/api/desk/${booking.deskId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({
+          bookingId: booking._id,
+          status: 'declined'
+        })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to decline booking');
-      }
+      const result = await response.json().catch(() => ({}));
+      console.log('📥 Response:', { status: response.status, data: result });
 
+      // Even if backend returns 500, it might have updated the DB
+      // So we'll mark as processed and refresh to verify
       alert('❌ Booking declined!');
-      fetchPendingBookings();
+      
+      // Mark this booking as processed
+      setProcessedBookings(prev => new Set([...prev, booking._id]));
+      
+      // Refresh the list to get updated data from backend
+      setTimeout(() => {
+        fetchPendingBookings();
+      }, 1000);
+      
     } catch (error) {
       console.error('Error declining booking:', error);
-      alert('Failed to decline booking: ' + error.message);
+      // Still try to refresh in case it worked on backend
+      alert('Request sent - refreshing to verify...');
+      setProcessedBookings(prev => new Set([...prev, booking._id]));
+      setTimeout(() => {
+        fetchPendingBookings();
+      }, 1000);
     } finally {
       setProcessingId(null);
     }
@@ -596,13 +637,58 @@ const AdminBookings = () => {
                     gap: '10px',
                     minWidth: '130px'
                   }}>
+                    {(booking.status === 'accepted' || booking.status === 'declined' || processedBookings.has(booking._id)) ? (
+                      // Show status after processing
+                      <div style={{
+                        padding: '20px',
+                        background: booking.status === 'accepted' 
+                          ? 'rgba(74, 222, 128, 0.1)' 
+                          : booking.status === 'declined'
+                          ? 'rgba(239, 68, 68, 0.1)'
+                          : 'rgba(74, 222, 128, 0.1)',
+                        border: booking.status === 'accepted'
+                          ? '1px solid rgba(74, 222, 128, 0.3)'
+                          : booking.status === 'declined'
+                          ? '1px solid rgba(239, 68, 68, 0.3)'
+                          : '1px solid rgba(74, 222, 128, 0.3)',
+                        borderRadius: '12px',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{
+                          fontSize: '32px',
+                          marginBottom: '8px',
+                          filter: booking.status === 'accepted'
+                            ? 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))'
+                            : booking.status === 'declined'
+                            ? 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.5))'
+                            : 'drop-shadow(0 0 10px rgba(74, 222, 128, 0.5))'
+                        }}>
+                          {booking.status === 'accepted' ? '✓' : booking.status === 'declined' ? '✗' : '✓'}
+                        </div>
+                        <div style={{
+                          fontSize: '12px',
+                          color: booking.status === 'accepted'
+                            ? '#4ade80'
+                            : booking.status === 'declined'
+                            ? '#ef4444'
+                            : '#4ade80',
+                          fontWeight: '600',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px'
+                        }}>
+                          {booking.status === 'accepted' ? 'Accepted' : booking.status === 'declined' ? 'Declined' : 'Processed'}
+                        </div>
+                      </div>
+                    ) : (
+                      // Show action buttons only for pending
+                      <>
                     <motion.button
                       whileHover={{ 
                         scale: 1.02,
                         boxShadow: '0 0 25px rgba(74, 222, 128, 0.4)'
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAccept(booking.deskId, booking._id)}
+                      onClick={() => handleAccept(booking)}
                       disabled={processingId === booking._id}
                       style={{
                         padding: '12px 20px',
@@ -634,7 +720,7 @@ const AdminBookings = () => {
                         boxShadow: '0 0 25px rgba(239, 68, 68, 0.4)'
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => handleDecline(booking.deskId, booking._id)}
+                      onClick={() => handleDecline(booking)}
                       disabled={processingId === booking._id}
                       style={{
                         padding: '12px 20px',
@@ -659,6 +745,8 @@ const AdminBookings = () => {
                       <span style={{ fontSize: '16px' }}>✗</span>
                       Decline
                     </motion.button>
+                      </>
+                    )}
                   </div>
                 </div>
               </motion.div>

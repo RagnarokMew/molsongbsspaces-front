@@ -144,6 +144,32 @@ const FloorPlanLegend = ({ currentTime }) => {
             display: 'flex', 
             alignItems: 'center', 
             gap: '10px',
+            background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+            padding: '8px 14px',
+            borderRadius: '10px',
+            border: '1px solid #fbbf24',
+            boxShadow: '0 2px 8px rgba(245, 158, 11, 0.1)'
+          }}
+        >
+          <div
+            style={{
+              width: '22px',
+              height: '22px',
+              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+              borderRadius: '6px',
+              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+            }}
+          />
+          <span style={{ fontSize: '13px', color: '#92400e', fontWeight: '600' }}>Pending</span>
+        </motion.div>
+
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ scale: 1.05, y: -2 }}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px',
             background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
             padding: '8px 14px',
             borderRadius: '10px',
