@@ -3,41 +3,165 @@ import { useState, useEffect } from 'react';
 import '../index.css';
 
 function Bookings() {
-  // sample data (kept for now — you can wire real API calls later)
-  const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      deskName: 'Desk 12A',
-      location: 'Floor 3, Zone B',
-      start: '2025-11-09T09:00:00Z',
-      end: '2025-11-09T17:00:00Z',
-      status: 'upcoming'
-    },
-    {
-      id: 2,
-      deskName: 'Meeting Room 5',
-      location: 'Floor 2',
-      start: '2025-11-10T14:00:00Z',
-      end: '2025-11-10T15:30:00Z',
-      status: 'upcoming'
-    },
-    {
-      id: 3,
-      deskName: 'Desk 8C',
-      location: 'Floor 3, Zone A',
-      start: '2025-11-05T09:00:00Z',
-      end: '2025-11-05T17:00:00Z',
-      status: 'completed'
-    }
-  ]);
+  // start empty — we'll populate from the API (prevents stale mock data showing)
+  const [bookings, setBookings] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     // quick simulated load to show the AdminBookings visual states
     setLoading(true);
     const t = setTimeout(() => setLoading(false), 700);
     return () => clearTimeout(t);
+  }, []);
+
+  // Fetch bookings for the current user from backend (POST /api/user/positions)
+  useEffect(() => {
+    const fetchUserBookings = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        const userString = localStorage.getItem('user');
+
+        // If neither stoken nor user info exists, nothing to do.
+        if (!userString && !token) {
+          console.warn('No user or token in localStorage — clearing bookings and skipping bookings fetch');
+          setBookings([]);
+          setLoading(false);
+          return;
+        }
+
+        console.log(token);
+        console.log(userString);
+
+        let userId = null;
+        try {
+          if (userString) {
+            const userObj = JSON.parse(userString);
+            userId = userObj._id || userObj.id || userObj.userId || null;
+          }
+        } catch (err) {
+          console.warn('Failed to parse user from localStorage', err);
+        }
+
+        // Choose API host: localhost for local dev, otherwise production
+        const API_BASE = window.location.hostname.includes('localhost')
+          ? 'http://localhost:3000'
+          : 'https://molsongbsspaces.onrender.com';
+
+  // Ensure timestamp is an explicit UTC ISO string (UTC now minus one hour)
+  const now = new Date();
+  now.setHours(now.getHours() - 1); // subtract one hour
+  const utcTimestamp = now.toISOString();
+
+  // Log explicitly so you can inspect the exact string in the console before send
+  console.info('UTC timestamp to send (now -1h):', utcTimestamp);
+
+        const payload = {
+          // only include userId when we have one — backend may accept token instead
+          ...(userId ? { userId } : {}),
+          // keep `timestamp` for backwards compatibility and add `timestamp_utc` to be explicit
+          timestamp: utcTimestamp,
+          timestamp_utc: utcTimestamp
+        };
+
+        // Always use the onrender production API URL per request
+        const fetchUrl = 'https://molsongbsspaces.onrender.com/api/user/positions';
+
+  console.info('Fetching user bookings (onrender)', { fetchUrl, payload, hasToken: !!token });
+  setFetchError(null);
+
+        // If frontend and backend are on different hosts (Romania vs Frankfurt),
+        // the request is cross-origin. Use CORS mode and optionally include
+        // credentials if your backend expects cookies (usually not needed with Bearer tokens).
+        const fetchOptions = {
+          method: 'POST',
+          mode: 'cors',
+          // change to 'include' only if your backend relies on cookies for auth
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify(payload)
+        };
+
+        const res = await fetch(fetchUrl, fetchOptions);
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          throw new Error(`Failed fetching bookings: ${res.status} ${text}`);
+        }
+
+        const data = await res.json().catch(() => null);
+        // Backend may return different shapes. The onrender endpoint returns:
+        // { status, message, data: [ { locationId, bookings: [ { start,end,status,_id,... } ] }, ... ] }
+        const raw = (data && (data.data || data.bookings || data.positions || data)) || [];
+
+        const mapStatus = (s) => {
+          if (!s) return 'pending';
+          const lower = String(s).toLowerCase();
+          if (lower === 'accepted' || lower === 'approved' || lower === 'upcoming') return 'upcoming';
+          if (lower === 'pending') return 'pending';
+          if (lower === 'declined' || lower === 'cancelled' || lower === 'rejected') return 'cancelled';
+          return lower;
+        };
+
+        // If each item represents a location with a bookings array, flatten those
+        if (Array.isArray(raw) && raw.length > 0 && raw[0] && (raw[0].locationId || raw[0].bookings)) {
+          const mapped = raw.flatMap((loc) => {
+            const locId = loc.locationId || loc.name || '';
+            const locBookings = Array.isArray(loc.bookings) ? loc.bookings : [];
+            return locBookings.map((b) => ({
+              id: b._id || b.id || null,
+              deskName: locId || (b.deskName || b.locationName) || 'Desk',
+              location: locId || b.location || '',
+              start: b.start || b.startTime || b.from || null,
+              end: b.end || b.endTime || b.to || null,
+              status: mapStatus(b.status || b.state || (b.approved ? 'accepted' : (b.pending ? 'pending' : null)))
+            }));
+          });
+
+          setBookings(mapped);
+          console.info(`Loaded ${mapped.length} bookings (flattened by location) from API`);
+
+        } else {
+          // fallback: try to treat raw as an array of booking-like objects
+          const normalize = (b) => ({
+            id: b._id || b.id || b.bookingId || b.idBooking || null,
+            deskName: b.deskName || (b.desk && (b.desk.name || b.desk.label)) || b.locationName || b.section || b.deskId || 'Desk',
+            location: b.location || (b.desk && b.desk.location) || b.locationName || '',
+            start: b.startTime || b.start || b.from || b.timestamp || null,
+            end: b.endTime || b.end || b.to || null,
+            status: mapStatus(b.status || b.state || (b.approved ? 'accepted' : (b.pending ? 'pending' : 'pending')))
+          });
+
+          if (Array.isArray(raw)) {
+            const mapped = raw.map(normalize);
+            setBookings(mapped);
+            console.info(`Loaded ${mapped.length} bookings from API`);
+          } else if (raw && typeof raw === 'object') {
+            const mapped = [normalize(raw)];
+            setBookings(mapped);
+            console.info('Loaded 1 booking object from API');
+          } else {
+            console.warn('Unexpected bookings payload, clearing bookings', data);
+            setBookings([]);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching user bookings:', err);
+        // Surface a friendly message in the UI. CORS failures often show as TypeError/NetworkError.
+        const message = err && err.message ? err.message : String(err);
+        setFetchError(message.includes('Failed to fetch') || message.includes('NetworkError') ?
+          'Network or CORS error while fetching bookings. Verify backend CORS allows this origin.' : message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserBookings();
   }, []);
 
   const pendingCount = bookings.filter((b) => (b.status || 'pending') === 'pending').length;
@@ -47,6 +171,8 @@ function Bookings() {
   const formatDateTime = (dateString) => {
     try {
       const date = new Date(dateString);
+      // Server is in Frankfurt (UTC+1). Display times offset by +1 hour to match server local time.
+      date.setHours(date.getHours() + 1);
       return date.toLocaleString(undefined, {
         month: 'short',
         day: 'numeric',
@@ -78,7 +204,7 @@ function Bookings() {
   };
 
   return (
-    <div
+    <div className="bookings-page"
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%)',
@@ -105,7 +231,7 @@ function Bookings() {
         }}
       />
 
-      <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+  <div className="bookings-container" style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '36px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
@@ -126,26 +252,26 @@ function Bookings() {
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} style={{ display: 'flex', gap: '24px', marginBottom: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <motion.div whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(96, 165, 250, 0.22)' }} style={{ ...statsCardBase, border: '1px solid rgba(59, 130, 246, 0.2)', background: 'linear-gradient(135deg, #eff6ff, #f8fafc)' }}>
+        <motion.div className="bookings-stats" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} style={{ display: 'flex', gap: '24px', marginBottom: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <motion.div className="stats-card" whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(96, 165, 250, 0.22)' }} style={{ ...statsCardBase, border: '1px solid rgba(59, 130, 246, 0.2)', background: 'linear-gradient(135deg, #eff6ff, #f8fafc)' }}>
             <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: '600', color: '#1d4ed8', marginBottom: '8px' }}>Total Bookings</div>
             <div style={{ fontSize: '36px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '6px' }}>{loading ? '...' : bookings.length}</div>
             <div style={{ fontSize: '12px', color: 'rgba(15, 23, 42, 0.55)' }}>All booking records fetched</div>
           </motion.div>
 
-          <motion.div whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(217, 119, 6, 0.18)' }} style={{ ...statsCardBase, border: '1px solid rgba(217, 119, 6, 0.25)', background: 'linear-gradient(135deg, #fff7ed, #fffbeb)' }}>
+          <motion.div className="stats-card" whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(217, 119, 6, 0.18)' }} style={{ ...statsCardBase, border: '1px solid rgba(217, 119, 6, 0.25)', background: 'linear-gradient(135deg, #fff7ed, #fffbeb)' }}>
             <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: '600', color: '#b45309', marginBottom: '8px' }}>Pending Review</div>
             <div style={{ fontSize: '36px', fontWeight: '700', color: '#92400e', letterSpacing: '-0.5px', marginBottom: '6px' }}>{loading ? '...' : pendingCount}</div>
             <div style={{ fontSize: '12px', color: 'rgba(180, 83, 9, 0.65)' }}>Awaiting admin action</div>
           </motion.div>
 
-          <motion.div whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(34, 197, 94, 0.22)' }} style={{ ...statsCardBase, border: '1px solid rgba(34, 197, 94, 0.25)', background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)' }}>
+          <motion.div className="stats-card" whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(34, 197, 94, 0.22)' }} style={{ ...statsCardBase, border: '1px solid rgba(34, 197, 94, 0.25)', background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)' }}>
             <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: '600', color: '#166534', marginBottom: '8px' }}>Approved</div>
             <div style={{ fontSize: '36px', fontWeight: '700', color: '#14532d', letterSpacing: '-0.5px', marginBottom: '6px' }}>{loading ? '...' : acceptedCount}</div>
             <div style={{ fontSize: '12px', color: 'rgba(22, 101, 52, 0.65)' }}>Confirmed desk bookings</div>
           </motion.div>
 
-          <motion.div whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(248, 113, 113, 0.18)' }} style={{ ...statsCardBase, border: '1px solid rgba(248, 113, 113, 0.25)', background: 'linear-gradient(135deg, #fef2f2, #fee2e2)' }}>
+          <motion.div className="stats-card" whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(248, 113, 113, 0.18)' }} style={{ ...statsCardBase, border: '1px solid rgba(248, 113, 113, 0.25)', background: 'linear-gradient(135deg, #fef2f2, #fee2e2)' }}>
             <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: '600', color: '#b91c1c', marginBottom: '8px' }}>Declined</div>
             <div style={{ fontSize: '36px', fontWeight: '700', color: '#991b1b', letterSpacing: '-0.5px', marginBottom: '6px' }}>{loading ? '...' : declinedCount}</div>
             <div style={{ fontSize: '12px', color: 'rgba(185, 28, 28, 0.65)' }}>Marked as unavailable</div>
@@ -168,11 +294,11 @@ function Bookings() {
         )}
 
         {!loading && bookings.length > 0 && (
-          <div style={{ display: 'grid', gap: '24px' }}>
+          <div className="booking-list" style={{ display: 'grid', gap: '24px' }}>
             {bookings.map((booking, index) => {
               const bookingKey = booking.id || `${booking.deskName}-${index}`;
               return (
-                <motion.div key={bookingKey} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} whileHover={{ y: -4 }} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,249,0.96))', border: '1px solid rgba(148,163,184,0.12)', padding: 18, borderRadius: 12, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'center' }}>
+                <motion.div className="booking-card" key={bookingKey} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} whileHover={{ y: -4 }} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,249,0.96))', border: '1px solid rgba(148,163,184,0.12)', padding: 18, borderRadius: 12, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'center' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                       <h4 style={{ margin: 0, color: '#0f172a', fontSize: 16 }}>{booking.deskName}</h4>
@@ -185,8 +311,6 @@ function Bookings() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {booking.status === 'upcoming' ? (
                       <>
-                        <motion.button whileHover={{ scale: 1.02 }} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #0067AC', color: '#0067AC', background: 'transparent', fontWeight: 700, cursor: 'pointer' }}>Modify</motion.button>
-                        <motion.button whileHover={{ scale: 1.02 }} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #ef4444', color: '#ef4444', background: 'transparent', fontWeight: 700, cursor: 'pointer' }}>Cancel</motion.button>
                       </>
                     ) : (
                       <div style={{ color: '#64748b', fontSize: 13, textAlign: 'right' }}>Completed</div>
@@ -199,12 +323,50 @@ function Bookings() {
         )}
 
         {/* New Booking FAB */}
-        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} style={{ marginTop: 20, padding: '12px 18px', background: 'linear-gradient(90deg,#F6DD58,#ffbf00)', color: '#002147', border: 'none', borderRadius: 10, fontWeight: 700, boxShadow: '0 8px 24px rgba(246,221,88,0.2)' }} onClick={() => window.location.href = '/map'}>
+        <motion.button className="new-booking-fab" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} style={{ marginTop: 20, padding: '12px 18px', background: 'linear-gradient(90deg,#F6DD58,#ffbf00)', color: '#002147', border: 'none', borderRadius: 10, fontWeight: 700, boxShadow: '0 8px 24px rgba(246,221,88,0.2)' }} onClick={() => window.location.href = '/map'}>
           + New Booking
         </motion.button>
       </div>
+      <style>{`
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes gradientShift { 0%,100%{transform:translate(0,0);}50%{transform:translate(30px,30px);} }
 
-      <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } @keyframes gradientShift { 0%,100%{transform:translate(0,0);}50%{transform:translate(30px,30px);} }`}</style>
+        /* Ensure the page chrome matches the component background to avoid a white bar on mobile */
+        html, body, #root {
+          height: 100%;
+          margin: 0;
+          background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Component-level responsive helpers */
+        .bookings-page { min-height: 100vh; padding: 40px 24px; box-sizing: border-box; }
+        .bookings-container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        .bookings-stats { display: flex; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
+        .stats-card { min-width: 180px; flex: 1 1 200px; border-radius: 16px; }
+
+        .booking-list { display: grid; gap: 24px; }
+        .booking-card { padding: 18px; border-radius: 12px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+
+        .new-booking-fab { position: static; }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+          .bookings-page { padding: 18px 12px; }
+          .bookings-stats { gap: 12px; margin-bottom: 20px; }
+          .stats-card { min-width: 140px; flex: 1 1 45%; padding: 12px 14px; }
+          .booking-card { grid-template-columns: 1fr; padding: 12px; }
+          .booking-card h4 { font-size: 15px; }
+          .new-booking-fab { position: fixed; right: 18px; bottom: 18px; margin: 0; z-index: 60; border-radius: 12px; }
+        }
+
+        /* Tablet / small desktop */
+        @media (min-width: 769px) and (max-width: 1200px) {
+          .stats-card { min-width: 160px; flex: 1 1 30%; }
+          .booking-list { grid-template-columns: 1fr; }
+        }
+      `}</style>
     </div>
   );
 }
