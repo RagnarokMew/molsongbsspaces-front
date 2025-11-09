@@ -168,86 +168,6 @@ const FloorPlanSVG = () => {
 
   // Define sections with their boundaries and colors
   const sections = {
-    "Bookster Area": {
-      color: "#10b981",
-      hoverColor: "#059669",
-    },
-    "Bubble Rooms": {
-      color: "#8b5cf6",
-      hoverColor: "#7c3aed",
-    },
-    // individual Bubble rooms - give each a distinct color
-    "Bubble Room1": {
-      color: "#60a5fa", // blue
-      hoverColor: "#2563eb",
-    },
-    "Bubble Room2": {
-      color: "#34d399", // green
-      hoverColor: "#059669",
-    },
-    "Bubble Room3": {
-      color: "#f97316", // orange
-      hoverColor: "#ea580c",
-    },
-    "Bubble Room4": {
-      color: "#f472b6", // pink
-      hoverColor: "#db2777",
-    },
-    // additional Bubble rooms
-    "Bubble Room5": {
-      color: "#a78bfa", // purple
-      hoverColor: "#7c3aed",
-    },
-    "Bubble Room6": {
-      color: "#fb7185", // rose
-      hoverColor: "#f43f5e",
-    },
-    // Cubicles
-    "Cubicle 1": {
-      color: "#fbbf24",
-      hoverColor: "#f59e0b",
-    },
-    "Cubicle 2": {
-      color: "#38bdf8",
-      hoverColor: "#0ea5e9",
-    },
-    "Cubicle 3": {
-      color: "#fca5a5",
-      hoverColor: "#f87171",
-    },
-    "Cubicle 4": {
-      color: "#c084fc",
-      hoverColor: "#a78bfa",
-    },
-    ManagementOffice3: {
-      color: "#f59e0b",
-      hoverColor: "#d97706",
-    },
-    ManagementOffice2: {
-      color: "#ec4899",
-      hoverColor: "#db2777",
-    },
-    ManagementOffice1: {
-      color: "#06b6d4",
-      hoverColor: "#0891b2",
-    },
-    "Work Tables UP": {
-      color: "#f97316",
-      hoverColor: "#ea580c",
-    },
-    "Work Tables Down": {
-      color: "#84cc16",
-      hoverColor: "#65a30d",
-    },
-    "beer point": {
-      color: "#eab308",
-      hoverColor: "#ca8a04",
-    },
-    // alias with title case so code that uses "Beer Point" matches
-    "Beer Point": {
-      color: "#eab308",
-      hoverColor: "#ca8a04",
-    },
   };
 
   // UP Tables (Cannot be automated because offsets aren't consistent :( )
@@ -2985,8 +2905,8 @@ const FloorPlanSVG = () => {
             {/* Beer Point*/}
             <path
               d="M229.195 1035.5H0.5V0.5H229.195V249.201H418.513V319.039H625.5V722.99H409.931V790.818H229.195V1035.5Z"
-              fill={getSectionColor('beer point')}
-              fillOpacity={0.14}
+              fill={getDeskColor('BeerPoint')}
+              fillOpacity="0.5"
               stroke={hoveredSection === 'Beer Point' ? '#1a1a1a' : 'transparent'}
               strokeWidth={3}
               style={{ cursor: 'pointer', transition: 'all 0.2s' }}
@@ -3010,8 +2930,8 @@ const FloorPlanSVG = () => {
               y="2"
               width="110"
               height="125" // 250
-              fill={getSectionColor("Bubble Room1")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom1")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3026,8 +2946,8 @@ const FloorPlanSVG = () => {
               y="127"
               width="110"
               height="125" // 250
-              fill={getSectionColor("Bubble Room2")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom2")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room2" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3042,8 +2962,8 @@ const FloorPlanSVG = () => {
               y="789"
               width="110"
               height="123"
-              fill={getSectionColor("Bubble Room3")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom3")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room3" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3058,8 +2978,8 @@ const FloorPlanSVG = () => {
               y="912" 
               width="110"
               height="123"
-              fill={getSectionColor("Bubble Room4")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom4")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room4" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3074,8 +2994,8 @@ const FloorPlanSVG = () => {
               y="6"
               width="131"
               height="240"
-              fill={getSectionColor("ManagementOffice3")}
-              fillOpacity="0.3"
+              fill={getDeskColor("ManagementOffice3")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "ManagementOffice3" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3090,8 +3010,8 @@ const FloorPlanSVG = () => {
               y="246"
               width="131"
               height="91"
-              fill={getSectionColor("Bubble Room5")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom5")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room5" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3106,8 +3026,8 @@ const FloorPlanSVG = () => {
               y="337"
               width="190"
               height="363"
-              fill={getSectionColor("Training Office 1")}
-              fillOpacity="0.3"
+              fill={getDeskColor("TrainingOffice1")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Training Office 1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3122,8 +3042,8 @@ const FloorPlanSVG = () => {
               y="337"
               width="190"
               height="363"
-              fill={getSectionColor("Training Office 2")}
-              fillOpacity="0.3"
+              fill={getDeskColor("TrainingOffice2")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Training Office 2" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3138,8 +3058,8 @@ const FloorPlanSVG = () => {
               y="340"
               width="153"
               height="239"
-              fill={getSectionColor("Bookster Area")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BooksterArea")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bookster Area" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3154,8 +3074,8 @@ const FloorPlanSVG = () => {
               y="579"
               width="153"
               height="122"
-              fill={getSectionColor("Bubble Room6")}
-              fillOpacity="0.3"
+              fill={getDeskColor("BubbleRoom6")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Bubble Room6" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3170,8 +3090,8 @@ const FloorPlanSVG = () => {
               y="120"
               width="48"
               height="87"
-              fill={getSectionColor("Cubicle 1")}
-              fillOpacity="0.3"
+              fill={getDeskColor("Cubicle1")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Cubicle 1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3186,8 +3106,8 @@ const FloorPlanSVG = () => {
               y="828"
               width="48"
               height="87"
-              fill={getSectionColor("Cubicle 2")}
-              fillOpacity="0.3"
+              fill={getDeskColor("Cubicle2")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Cubicle 2" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3202,8 +3122,8 @@ const FloorPlanSVG = () => {
               y="980"
               width="87"
               height="48"
-              fill={getSectionColor("Cubicle 3")}
-              fillOpacity="0.3"
+              fill={getDeskColor("Cubicle3")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Cubicle 3" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3218,8 +3138,8 @@ const FloorPlanSVG = () => {
               y="155"
               width="87"
               height="48"
-              fill={getSectionColor("Cubicle 4")}
-              fillOpacity="0.3"
+              fill={getDeskColor("Cubicle4")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "Cubicle 4" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3234,8 +3154,8 @@ const FloorPlanSVG = () => {
               y="700"
               width="130"
               height="151"
-              fill={getSectionColor("ManagementOffice2")}
-              fillOpacity="0.3"
+              fill={getDeskColor("ManagementOffice2")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "ManagementOffice2" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
@@ -3250,8 +3170,8 @@ const FloorPlanSVG = () => {
               y="850"
               width="130"
               height="178"
-              fill={getSectionColor("ManagementOffice1")}
-              fillOpacity="0.3"
+              fill={getDeskColor("ManagementOffice1")}
+              fillOpacity="0.5"
               stroke={hoveredSection === "ManagementOffice1" ? "#1a1a1a" : "transparent"}
               strokeWidth="3"
               style={{ cursor: "pointer", transition: "all 0.2s" }}
