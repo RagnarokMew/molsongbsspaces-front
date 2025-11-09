@@ -3,6 +3,37 @@ import BookingModal from "./BookingModal";
 import { table } from "framer-motion/client";
 
 const FloorPlanSVG = () => {
+  const formatDateInputValue = (date) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+    return date.toISOString().split('T')[0];
+  };
+
+  const formatTimeInputValue = (date) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '00:00';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
+  const buildDateTimeFromInput = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return new Date();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hour, minute] = timeStr.split(':').map(Number);
+
+    if ([year, month, day, hour, minute].some((value) => Number.isNaN(value))) {
+      return new Date();
+    }
+
+    return new Date(year, month - 1, day, hour, minute, 0, 0);
+  };
+
+  const formatDisplayTimestamp = (date) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return 'Invalid date';
+    return date.toLocaleString([], { hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
+  const defaultsNow = new Date();
+  const defaultDate = formatDateInputValue(defaultsNow);
+  const defaultTime = formatTimeInputValue(defaultsNow);
+
   const [hoveredSection, setHoveredSection] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -10,6 +41,10 @@ const FloorPlanSVG = () => {
   const [desks, setDesks] = useState([]); // Store all desk data
   const [loadingDesks, setLoadingDesks] = useState(true);
   const [currentUser, setCurrentUser] = useState(null); // Store current user data
+  const [viewMode, setViewMode] = useState('live'); // 'live' | 'search'
+  const [searchDate, setSearchDate] = useState(defaultDate);
+  const [searchTime, setSearchTime] = useState(defaultTime);
+  const [searchTimestamp, setSearchTimestamp] = useState(() => buildDateTimeFromInput(defaultDate, defaultTime));
 
   // Update current time every second for real-time updates
   useEffect(() => {
@@ -63,6 +98,17 @@ const FloorPlanSVG = () => {
 
     fetchUserData();
   }, []);
+
+  // Keep derived search timestamp in sync with selected date/time
+  useEffect(() => {
+    if (viewMode === 'search') {
+      setSearchTimestamp(buildDateTimeFromInput(searchDate, searchTime));
+    }
+  }, [viewMode, searchDate, searchTime]);
+
+  const isLiveMode = viewMode === 'live';
+  const referenceTime = isLiveMode ? currentTime : searchTimestamp;
+  const selectedDeskStatus = selectedSection ? getDeskStatus(selectedSection) : null;
 
   // Fetch all desks from backend API
   useEffect(() => {
@@ -502,8 +548,8 @@ const FloorPlanSVG = () => {
 
     console.log(`🔍 Checking availability for ${deskId}:`, desk);
 
-    const now = new Date();
-    console.log(`⏰ Current time: ${now.toISOString()} (${now.getTime()})`);
+  const now = referenceTime instanceof Date ? referenceTime : new Date(referenceTime);
+  console.log(`⏰ Reference time: ${now.toISOString()} (${now.getTime()})`);
     
     // Check attendances (primary - current format from backend)
     if (desk.attendances && desk.attendances.length > 0) {
@@ -572,34 +618,41 @@ const FloorPlanSVG = () => {
     return true; // Available if no active attendance or booking
   };
 
-  // Get booking status for a desk (available, booked, pending)
-  const getDeskStatus = (deskId) => {
+  // Get booking status for a desk (available, booked, pending) at the selected time
+  const getDeskStatus = (deskId, overrideTime) => {
     if (loadingDesks) return 'available';
-    
-    const desk = desks.find(d => {
+
+    const desk = desks.find((d) => {
       if (d.name === deskId || d.id === deskId || d._id === deskId) return true;
       if (d.locationId === deskId) return true;
       return false;
     });
-    
+
     if (!desk) {
-      // Only log for table desks, not sections
       if (deskId.includes('Table')) {
         console.log(`⚠️ Desk not found in backend data: ${deskId}`);
-        console.log(`Available desk IDs:`, desks.map(d => ({id: d.id, locationId: d.locationId, name: d.name})).slice(0, 5));
+        console.log(`Available desk IDs:`, desks.map((d) => ({ id: d.id, locationId: d.locationId, name: d.name })).slice(0, 5));
       }
       return 'available';
     }
 
-    const now = new Date();
-    console.log(`🔍 Checking status for ${deskId} (matched desk: ${desk.locationId || desk.id}) at ${now.toLocaleTimeString()}`);
-    
-    // Check bookings - ANY booking where current time is within the time slot
+    const targetTime = overrideTime instanceof Date
+      ? overrideTime
+      : overrideTime
+      ? new Date(overrideTime)
+      : referenceTime;
+
+    if (!(targetTime instanceof Date) || Number.isNaN(targetTime.getTime())) {
+      console.warn('⚠️ Invalid reference time supplied to getDeskStatus, defaulting to available');
+      return 'available';
+    }
+
+    console.log(`🔍 Checking status for ${deskId} (matched desk: ${desk.locationId || desk.id}) at ${targetTime.toLocaleString()}`);
+
     if (desk.bookings && desk.bookings.length > 0) {
       console.log(`📋 Found ${desk.bookings.length} booking(s) for ${deskId}:`, desk.bookings);
-      
+
       for (const booking of desk.bookings) {
-        // Skip declined bookings - they don't affect availability
         if (booking.status === 'declined') {
           console.log(`  Skipping declined booking`);
           continue;
@@ -607,50 +660,46 @@ const FloorPlanSVG = () => {
 
         const bookingStart = new Date(booking.start);
         const bookingEnd = new Date(booking.end);
-        const isWithinTime = now >= bookingStart && now <= bookingEnd;
-        
+        const isWithinTime = targetTime >= bookingStart && targetTime <= bookingEnd;
+
         console.log(`  Booking: ${bookingStart.toISOString()} - ${bookingEnd.toISOString()}`);
-        console.log(`  Current: ${now.toISOString()}`);
+        console.log(`  Reference: ${targetTime.toISOString()}`);
         console.log(`  Status: ${booking.status}, Within time: ${isWithinTime}`);
-        console.log(`  Comparison: now(${now.getTime()}) >= start(${bookingStart.getTime()}) && now <= end(${bookingEnd.getTime()})`);
-        
-        // Only check bookings in the current timeframe
+        console.log(`  Comparison: ref(${targetTime.getTime()}) >= start(${bookingStart.getTime()}) && ref <= end(${bookingEnd.getTime()})`);
+
         if (isWithinTime) {
-          // Pending booking → desk shows as "pending"
           if (booking.status === 'pending') {
             console.log(`  ⏳ PENDING - Booking awaiting approval`);
             return 'pending';
           }
-          // Accepted booking in current timeframe → desk is "booked" (unavailable)
           if (booking.status === 'accepted') {
-            console.log(`  🔴 BOOKED - Accepted booking is active now`);
+            console.log(`  🔴 BOOKED - Accepted booking is active`);
             return 'booked';
           }
         } else {
-          console.log(`  ⏭️ Booking outside current timeframe - doesn't affect availability`);
+          console.log(`  ⏭️ Booking outside selected timeframe`);
         }
       }
     }
-    
-    // Check attendances (for legacy/active check-ins)
+
     if (desk.attendances && desk.attendances.length > 0) {
       console.log(`📋 Checking ${desk.attendances.length} attendances for ${deskId}`);
-      
+
       for (const attendance of desk.attendances) {
         if (attendance.status === 'completed') continue;
-        
+
         const attendanceStart = new Date(attendance.start);
-        
+
         if (attendance.end) {
           const attendanceEnd = new Date(attendance.end);
-          const isWithinTime = now >= attendanceStart && now <= attendanceEnd;
-          
+          const isWithinTime = targetTime >= attendanceStart && targetTime <= attendanceEnd;
+
           console.log(`  Attendance: ${attendanceStart.toISOString()} - ${attendanceEnd.toISOString()}`);
           console.log(`  Status: ${attendance.status}, Within time: ${isWithinTime}`);
-          
+
           if (isWithinTime) {
             if (attendance.status === 'pending') {
-              console.log(`  ⚠️ PENDING attendance found`);
+              console.log(`  ⏳ PENDING attendance found`);
               return 'pending';
             }
             if (attendance.status === 'active') {
@@ -659,20 +708,19 @@ const FloorPlanSVG = () => {
             }
           }
         } else {
-          // No end time - if start is in the past and status is active
-          if (now >= attendanceStart && attendance.status === 'active') {
+          if (targetTime >= attendanceStart && attendance.status === 'active') {
             console.log(`  🔴 BOOKED (active attendance without end time)`);
             return 'booked';
           }
           if (attendance.status === 'pending') {
-            console.log(`  ⚠️ PENDING attendance (no end time)`);
+            console.log(`  ⏳ PENDING attendance (no end time)`);
             return 'pending';
           }
         }
       }
     }
 
-    console.log(`  ✅ AVAILABLE - No active bookings in current timeframe`);
+    console.log(`  ✅ AVAILABLE - No active bookings in selected timeframe`);
     return 'available';
   };
 
@@ -702,8 +750,8 @@ const FloorPlanSVG = () => {
     }
 
     // For other sections, use old logic
-    const currentHour = currentTime.getHours();
-    const currentDate = currentTime.toISOString().split("T")[0];
+  const currentHour = referenceTime.getHours();
+  const currentDate = referenceTime.toISOString().split("T")[0];
 
     const sectionBooking = bookings.find(
       (b) =>
@@ -753,7 +801,7 @@ const FloorPlanSVG = () => {
 
     console.log(`📊 getDeskInfo for ${deskId}:`, desk);
 
-    const now = new Date();
+  const now = referenceTime instanceof Date ? referenceTime : new Date(referenceTime);
     let currentBooking = null;
     let nextBooking = null;
     let currentAttendance = null;
@@ -1025,6 +1073,134 @@ const FloorPlanSVG = () => {
   return (
     <>
       <div>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '16px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '20px',
+            background: 'linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%)',
+            borderRadius: '12px',
+            padding: '18px 20px',
+            border: '1px solid rgba(99, 102, 241, 0.25)',
+            boxShadow: '0 10px 30px rgba(99, 102, 241, 0.12)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.7)',
+              padding: '4px',
+              borderRadius: '999px',
+              boxShadow: '0 1px 2px rgba(15, 23, 42, 0.1)',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setViewMode('live')}
+              style={{
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                padding: '10px 18px',
+                borderRadius: '999px',
+                fontWeight: 600,
+                fontSize: '14px',
+                color: isLiveMode ? '#0f172a' : '#475569',
+                background: isLiveMode ? 'linear-gradient(135deg, #a5b4fc, #6366f1)' : 'transparent',
+                boxShadow: isLiveMode ? '0 8px 18px rgba(99, 102, 241, 0.35)' : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Live Mode
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('search')}
+              style={{
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                padding: '10px 18px',
+                borderRadius: '999px',
+                fontWeight: 600,
+                fontSize: '14px',
+                color: !isLiveMode ? '#0f172a' : '#475569',
+                background: !isLiveMode ? 'linear-gradient(135deg, #fde68a, #f59e0b)' : 'transparent',
+                boxShadow: !isLiveMode ? '0 8px 18px rgba(245, 158, 11, 0.35)' : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              Search Mode
+            </button>
+          </div>
+
+          {viewMode === 'search' && (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '16px',
+                alignItems: 'center',
+              }}
+            >
+              <label style={{ display: 'flex', flexDirection: 'column', fontSize: '12px', fontWeight: 600, color: '#1e293b' }}>
+                Date
+                <input
+                  type="date"
+                  value={searchDate}
+                  onChange={(e) => setSearchDate(e.target.value)}
+                  style={{
+                    marginTop: '4px',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #cbd5f5',
+                    background: '#fff',
+                    fontSize: '14px',
+                    color: '#0f172a',
+                    minWidth: '160px',
+                    boxShadow: '0 1px 2px rgba(15, 23, 42, 0.06)',
+                  }}
+                />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', fontSize: '12px', fontWeight: 600, color: '#1e293b' }}>
+                Time
+                <input
+                  type="time"
+                  value={searchTime}
+                  onChange={(e) => setSearchTime(e.target.value)}
+                  step={1800}
+                  style={{
+                    marginTop: '4px',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #cbd5f5',
+                    background: '#fff',
+                    fontSize: '14px',
+                    color: '#0f172a',
+                    minWidth: '120px',
+                    boxShadow: '0 1px 2px rgba(15, 23, 42, 0.06)',
+                  }}
+                />
+              </label>
+            </div>
+          )}
+
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>
+              {isLiveMode ? 'Live availability' : 'Previewing availability'}
+            </p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#475569' }}>
+              {isLiveMode
+                ? `Updated ${currentTime.toLocaleTimeString([], { hour12: false })}`
+                : formatDisplayTimestamp(referenceTime)}
+            </p>
+          </div>
+        </div>
+
         <div
           style={{
             background: "white",
@@ -3095,7 +3271,8 @@ const FloorPlanSVG = () => {
           deskId={selectedSection}
           isAvailable={getDeskStatus(selectedSection) === 'available'}
           deskStatus={getDeskStatus(selectedSection)}
-          currentTime={currentTime}
+          currentTime={referenceTime}
+          isLiveMode={isLiveMode}
           onClose={handleCloseModal}
           onConfirm={handleBookingConfirm}
         />
