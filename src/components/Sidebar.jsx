@@ -277,7 +277,6 @@ function Sidebar() {
           position: 'relative',
           zIndex: 9999,
           overflowY: 'auto',
-          maxHeight: '100vh',
           WebkitOverflowScrolling: 'touch'
         }}
         className="sidebar"

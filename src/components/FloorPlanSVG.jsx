@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import BookingModal from "./BookingModal";
 import { table } from "framer-motion/client";
 
-const FloorPlanSVG = () => {
+const FloorPlanSVG = ({ isTablet = false, isMobile = false }) => {
   const formatDateInputValue = (date) => {
     if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
     return date.toISOString().split('T')[0];
@@ -170,7 +170,41 @@ const FloorPlanSVG = () => {
   const sections = {
   };
 
-  // UP Tables (Cannot be automated because offsets aren't consistent :( )
+  const containerStyle = {
+    background: 'white',
+    borderRadius: isMobile ? '14px' : '16px',
+    padding: isMobile ? '16px' : isTablet ? '24px' : '30px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    maxHeight: isMobile ? 'none' : '85vh',
+    minHeight: isMobile ? '420px' : '520px',
+    width: '100%',
+    touchAction: 'pan-x pan-y pinch-zoom',
+    WebkitOverflowScrolling: 'touch'
+  };
+
+  const rotationWrapperStyle = isMobile
+    ? {
+        width: 'calc(100vw - 32px)',
+        maxWidth: 'none',
+        height: 'auto',
+        maxHeight: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        transform: 'rotate(90deg)',
+        transformOrigin: 'center center'
+      }
+    : {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      };  // UP Tables (Cannot be automated because offsets aren't consistent :( )
   const tableUpData = [
     { id: 'A_Table1.M1', x: 516, y: 88, width: 44, height: 49 },
     { id: 'A_Table1.M2', x: 516, y: 88 + 49, width: 44, height: 49 },
@@ -1123,25 +1157,24 @@ const FloorPlanSVG = () => {
         </div>
 
         <div
-          style={{
-            background: "white",
-            borderRadius: "8px",
-            padding: "30px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          }}
+          style={containerStyle}
           className="floor-plan-svg-container"
         >
+          <div
+            style={rotationWrapperStyle}
+            className="floor-plan-svg-rotation"
+          >
           <svg
             width="3234"
             height="1036"
             viewBox="0 0 3234 1036"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{ maxWidth: "1200px", width: "100%", height: "auto" }}
+            style={{
+              width: "100%",
+              maxWidth: "1200px",
+              height: "auto"
+            }}
             className="floor-plan-svg"
           >
             <defs>
@@ -3180,6 +3213,8 @@ const FloorPlanSVG = () => {
               onClick={() => handleSectionClick("ManagementOffice1")}
             />
           </svg>
+        </div>
+
         </div>
 
         {/* Hovered Section Info removed per design request */}

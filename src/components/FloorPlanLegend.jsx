@@ -24,9 +24,9 @@ const FloorPlanLegend = ({ currentTime }) => {
       variants={containerVariants}
       style={{
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        borderRadius: '16px',
-        padding: '20px 24px',
-        marginBottom: '24px',
+        borderRadius: '18px',
+        padding: 'clamp(16px, 3vw, 24px)',
+        marginBottom: 'clamp(20px, 4vw, 28px)',
         boxShadow: '0 4px 20px rgba(0, 103, 172, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)',
         border: '1px solid rgba(0, 103, 172, 0.1)',
         position: 'relative',
@@ -52,7 +52,9 @@ const FloorPlanLegend = ({ currentTime }) => {
         alignItems: 'center', 
         gap: '10px',
         marginBottom: '16px'
-      }}>
+      }}
+      className="floor-plan-legend__timestamp"
+      >
         <motion.div
           animate={{ 
             scale: [1, 1.2, 1],
@@ -83,7 +85,14 @@ const FloorPlanLegend = ({ currentTime }) => {
       </div>
 
       {/* Legend items with modern cards */}
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div
+        className="floor-plan-legend__items"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: '14px'
+        }}
+      >
         <motion.div 
           variants={itemVariants}
           whileHover={{ scale: 1.05, y: -2 }}
@@ -168,6 +177,41 @@ const FloorPlanLegend = ({ currentTime }) => {
         @keyframes shimmer {
           0% { background-position: 0% 0%; }
           100% { background-position: 200% 0%; }
+        }
+
+        @media (max-width: 768px) {
+          .floor-plan-legend {
+            padding: 18px 20px !important;
+            margin-bottom: 20px !important;
+          }
+
+          .floor-plan-legend__timestamp {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 12px;
+          }
+
+          .floor-plan-legend__items {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .floor-plan-legend {
+            padding: 16px !important;
+          }
+
+          .floor-plan-legend__timestamp {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+          }
+
+          .floor-plan-legend__items {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
         }
       `}</style>
     </motion.div>
