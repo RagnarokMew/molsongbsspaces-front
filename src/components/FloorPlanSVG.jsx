@@ -2991,7 +2991,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: 'pointer', transition: 'all 0.2s' }}
               onMouseEnter={() => setHoveredSection('Beer Point')}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick('Beer Point')}
+              onClick={() => handleSectionClick('BeerPoint')}
             />
 
             <g
@@ -2999,7 +2999,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: 'pointer', transition: 'all 0.2s' }}
               onMouseEnter={() => setHoveredSection('Beer Point')}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick('Beer Point')}
+              onClick={() => handleSectionClick('BeerPoint')}
             >
             </g>
 
@@ -3016,7 +3016,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room1")}
+              onClick={() => handleSectionClick("BubbleRoom1")}
             />
 
             {/* Bubble Room2*/}
@@ -3032,7 +3032,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room2")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room2")}
+              onClick={() => handleSectionClick("BubbleRoom2")}
             />
 
             {/* Bubble Room3*/}
@@ -3048,7 +3048,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room3")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room3")}
+              onClick={() => handleSectionClick("BubbleRoom3")}
             />
 
             {/* Bubble Room4*/}
@@ -3064,7 +3064,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room4")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room4")}
+              onClick={() => handleSectionClick("BubbleRoom4")}
             />
 
             {/* Management Office 3 - Far right top */}
@@ -3096,7 +3096,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room5")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room5")}
+              onClick={() => handleSectionClick("BubbleRoom5")}
             />
 
             {/* Training Office 1 - Far right middle */}
@@ -3112,7 +3112,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Training Office 1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Training Office 1")}
+              onClick={() => handleSectionClick("TrainingOffice1")}
             />
 
             {/* Training Office 2 - Far right middle */}
@@ -3128,7 +3128,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Training Office 2")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Training Office 2")}
+              onClick={() => handleSectionClick("TrainingOffice2")}
             />
 
             {/* Bookster Area */}
@@ -3144,7 +3144,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bookster Area")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bookster Area")}
+              onClick={() => handleSectionClick("BooksterArea")}
             />
 
             {/* Bubble Room6 */}
@@ -3160,7 +3160,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Bubble Room6")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Bubble Room6")}
+              onClick={() => handleSectionClick("BubbleRoom6")}
             />
 
             {/* Cubicle 1 - TODO: see if it needs separate hitboxes for chairs*/}
@@ -3176,7 +3176,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Cubicle 1")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Cubicle 1")}
+              onClick={() => handleSectionClick("Cubicle1")}
             />
 
             {/* Cubicle 2 - TODO: see if it needs separate hitboxes for chairs*/}
@@ -3192,7 +3192,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Cubicle 2")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Cubicle 2")}
+              onClick={() => handleSectionClick("Cubicle2")}
             />
 
             {/* Cubicle 3 - TODO: see if it needs separate hitboxes for chairs*/}
@@ -3208,7 +3208,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Cubicle 3")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Cubicle 3")}
+              onClick={() => handleSectionClick("Cubicle3")}
             />
 
             {/* Cubicle 4 - TODO: see if it needs separate hitboxes for chairs*/}
@@ -3224,7 +3224,7 @@ const FloorPlanSVG = () => {
               style={{ cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={() => setHoveredSection("Cubicle 4")}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => handleSectionClick("Cubicle 4")}
+              onClick={() => handleSectionClick("Cubicle4")}
             />
 
             {/* Management Office 2 - Far right middle bottom */}
