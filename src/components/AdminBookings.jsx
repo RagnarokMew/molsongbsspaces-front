@@ -925,45 +925,6 @@ const AdminBookings = () => {
                             {booking.end ? formatDateTime(booking.end) : 'Open ended'}
                           </div>
                         </div>
-
-                        <div
-                          style={{
-                            ...infoCardBase,
-                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(241, 245, 249, 0.9))'
-                          }}
-                        >
-                          <div
-                            style={{
-                              ...detailLabelStyles,
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '6px'
-                            }}
-                          >
-                            <span style={{ fontSize: '14px' }}>👤</span>
-                            User ID
-                          </div>
-                          {requesterToken === 'N/A' ? (
-                            <div
-                              style={{
-                                ...detailValueStyles,
-                                color: '#94a3b8'
-                              }}
-                            >
-                              N/A
-                            </div>
-                          ) : (
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                gap: '8px'
-                              }}
-                            >
-                              <span style={badgeStyles}>{requesterToken}</span>
-                            </div>
-                          )}
-                        </div>
                         {attendeeIds.length > 0 ? (
                           <div
                             style={{
