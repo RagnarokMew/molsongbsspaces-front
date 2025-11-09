@@ -5,9 +5,6 @@ import FloorPlanLegend from './FloorPlanLegend';
 
 function Map() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [viewportWidth, setViewportWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 1024
-  );
 
   // Update current time every second
   useEffect(() => {
@@ -18,29 +15,14 @@ function Map() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const handleResize = () => setViewportWidth(window.innerWidth);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const isTablet = viewportWidth <= 1024;
-  const isMobile = viewportWidth <= 640;
-
   return (
     <>
       <div style={{
-        padding: isMobile ? '24px 18px' : isTablet ? '32px 28px' : '40px',
+        padding: '40px',
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #dbeafe 100%)',
         position: 'relative',
-        overflowX: isMobile ? 'hidden' : 'hidden',
-        overflowY: 'auto'
+        overflow: 'hidden'
       }}>
         {/* Animated background pattern */}
         <div style={{
@@ -57,11 +39,10 @@ function Map() {
         }} />
 
         <div style={{
-          maxWidth: isTablet ? '100%' : '1600px',
+          maxWidth: '1600px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1,
-          width: '100%'
+          zIndex: 1
         }}>
           {/* Animated header */}
           <motion.div
@@ -71,10 +52,9 @@ function Map() {
           >
             <div style={{ 
               display: 'flex', 
-              alignItems: isTablet ? 'flex-start' : 'center', 
-              gap: isMobile ? '12px' : '15px',
-              marginBottom: '10px',
-              flexDirection: isTablet ? 'column' : 'row'
+              alignItems: 'center', 
+              gap: '15px',
+              marginBottom: '10px'
             }}>
               <motion.div
                 animate={{ 
@@ -109,24 +89,22 @@ function Map() {
                 </svg>
               </motion.div>
               <h1 style={{
-                fontSize: isMobile ? 'clamp(2.2rem, 6vw, 2.6rem)' : isTablet ? '32px' : '36px',
+                fontSize: '36px',
                 fontWeight: '800',
                 background: 'linear-gradient(135deg, #0067AC, #002147)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                letterSpacing: '-0.5px',
-                textAlign: isTablet ? 'center' : 'left'
+                letterSpacing: '-0.5px'
               }}>
                 Office Floor Plan
               </h1>
             </div>
             <p style={{
               color: '#64748b',
-              marginBottom: isMobile ? '22px' : '30px',
-              fontSize: isMobile ? '14px' : '16px',
-              fontWeight: '500',
-              textAlign: isTablet ? 'center' : 'left'
+              marginBottom: '30px',
+              fontSize: '16px',
+              fontWeight: '500'
             }}>
               Interactive workspace layout with real-time availability
             </p>
@@ -147,35 +125,56 @@ function Map() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            style={{
-              width: '100%',
-              overflowX: isMobile ? 'auto' : 'visible',
-              overflowY: 'visible',
-              WebkitOverflowScrolling: 'touch',
-              paddingBottom: isMobile ? '4px' : 0
-            }}
           >
-            <FloorPlanSVG isTablet={isTablet} isMobile={isMobile} />
+            <FloorPlanSVG />
           </motion.div>
         </div>
       </div>
 
-      {/* Responsive helpers */}
+      {/* Add CSS for mobile rotation */}
       <style>{`
-        .map-svg-wrapper {
-          display: flex;
-          justify-content: center;
-        }
-
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
+          /* Legend stays normal - no rotation */
+          .floor-plan-legend {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 20px !important;
+          }
+          
+          /* SVG wrapper for rotation */
           .map-svg-wrapper {
-            margin: 12px 0 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 80vh;
+            overflow: hidden;
+            margin: 20px 0;
+          }
+          
+          /* Rotate the SVG container */
+          .floor-plan-svg-container {
+            transform: rotate(90deg) !important;
+            transform-origin: center center !important;
+            width: 90vh !important;
+            height: 90vw !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 20px !important;
+          }
+          
+          /* Make SVG bigger on mobile */
+          .floor-plan-svg {
+            max-width: 180% !important;
+            width: 180% !important;
+            height: auto !important;
           }
         }
-
-        @media (max-width: 768px) {
+        
+        @media (min-width: 769px) {
           .map-svg-wrapper {
-            margin: 12px 0 20px;
+            display: flex;
+            justify-content: center;
           }
         }
       `}</style>
