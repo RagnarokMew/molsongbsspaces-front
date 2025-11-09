@@ -8,10 +8,15 @@ function FindMyMate() {
   const [colleagues, setColleagues] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const API_BASE = window.location.hostname.includes('localhost')
+      ? 'http://localhost:3000'
+      : 'https://molsongbsspaces.onrender.com';
+
+
   useEffect(() => {
     const fetchColleagues = async () => {
       try {
-        const usersResponse = await fetch('http://localhost:3000/api/user/all', {
+        const usersResponse = await fetch(`${API_BASE}/api/user/all`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -21,7 +26,7 @@ function FindMyMate() {
 
         const colleaguesWithPositions = await Promise.all(
           users.map(async (user) => {
-            const positionResponse = await fetch('http://localhost:3000/api/user/positions', {
+            const positionResponse = await fetch(`${API_BASE}/api/user/positions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
