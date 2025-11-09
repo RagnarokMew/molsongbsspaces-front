@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import BookingModal from "./BookingModal";
+import { lazy, Suspense } from "react";
+const BookingModal = lazy(() => import("./BookingModal"));
 import { table } from "framer-motion/client";
 
 const FloorPlanSVG = () => {
@@ -3187,15 +3188,17 @@ const FloorPlanSVG = () => {
 
       {/* Booking Modal */}
       {selectedSection && (
-        <BookingModal
-          section={selectedSection}
-          deskId={selectedSection}
-          deskStatus={selectedDeskStatus ?? 'available'}
-          currentTime={referenceTime}
-          isLiveMode={isLiveMode}
-          onClose={handleCloseModal}
-          onConfirm={handleBookingConfirm}
-        />
+        <Suspense>
+          <BookingModal
+            section={selectedSection}
+            deskId={selectedSection}
+            deskStatus={selectedDeskStatus ?? 'available'}
+            currentTime={referenceTime}
+            isLiveMode={isLiveMode}
+            onClose={handleCloseModal}
+            onConfirm={handleBookingConfirm}
+          />
+        </Suspense>
       )}
     </>
   );

@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "./App.jsx";
-import Home from "./components/Home.jsx";
-import Login from "./components/Login.jsx";
-import Map from "./components/Map.jsx";
-import Bookings from "./components/Bookings.jsx";
-import FindMyMate from "./components/FindMyMate.jsx";
-import Register from "./components/Register.jsx";
-import AdminBookings from "./components/AdminBookings.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import { lazy, Suspense } from "react";
+const App = lazy(() => import("./App.jsx"));
+const Home = lazy(() => import("./components/Home.jsx"));
+const Login = lazy(() => import("./components/Login.jsx"));
+const Map = lazy(() => import("./components/Map.jsx"));
+const Bookings = lazy(() => import("./components/Bookings.jsx"));
+const FindMyMate = lazy(() => import("./components/FindMyMate.jsx"));
+const Register = lazy(() => import("./components/Register.jsx"));
+const AdminBookings = lazy(() => import("./components/AdminBookings.jsx"));
+const ProtectedRoute = lazy(() => import("./components/ProtectedRoute.jsx"));
 
 const router = createBrowserRouter([
   {
@@ -23,13 +24,13 @@ const router = createBrowserRouter([
     ),
     errorElement: <div>Page not found</div>,
     children: [
-      { index: true, element: <Navigate to="/home" replace /> },
-      { path: "home", element: <Home /> },
-      { path: "map", element: <Map /> },
-      { path: "bookings", element: <Bookings /> },
-      { path: "admin/bookings", element: <AdminBookings /> },
-      { path: "admin/register", element: <Register /> },
-      { path: "find-mate", element: <FindMyMate /> },
+      { index: true, element: <Suspense><Navigate to="/home" replace /></Suspense> },
+      { path: "home", element: <Suspense><Home /></Suspense> },
+      { path: "map", element: <Suspense><Map /></Suspense> },
+      { path: "bookings", element: <Suspense><Bookings /></Suspense> },
+      { path: "admin/bookings", element: <Suspense><AdminBookings /></Suspense> },
+      { path: "admin/register", element: <Suspense><Register /></Suspense> },
+      { path: "find-mate", element: <Suspense><FindMyMate /></Suspense> },
       { path: "settings", element: <div className="p-8"><h1 className="text-3xl font-bold">Settings - Coming Soon</h1></div> },
     ],
   },
