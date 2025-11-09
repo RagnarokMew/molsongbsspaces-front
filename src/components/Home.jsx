@@ -122,17 +122,26 @@ const Home = () => {
       let declinedBookings = 0;
 
       desks.forEach((desk) => {
-        // Categorize as seat or room based on desk name
-        // Seats have pattern like "A.table_m2", "B.table_m1", etc.
-        // Rooms don't have the ".table_" pattern
-        const isSeat = desk.name && desk.name.includes('.table_');
+        // Categorize as seat or room based on locationId
+        // Seats have pattern like "A_Table1.M1", "B_Table2.M3", etc. (contain "Table")
+        // Rooms don't have the "Table" pattern
+        const isSeat = desk.locationId && desk.locationId.includes('Table');
+        
+        // Check if desk is occupied:
+        // - By the isOccupied flag OR
+        // - By having an accepted booking
+        let hasActiveBooking = false;
+        if (desk.bookings && desk.bookings.length > 0) {
+          hasActiveBooking = desk.bookings.some(booking => booking.status === 'accepted');
+        }
+        const isOccupied = desk.isOccupied || hasActiveBooking;
         
         if (isSeat) {
           totalSeats++;
-          if (desk.isOccupied) occupiedSeats++;
+          if (isOccupied) occupiedSeats++;
         } else {
           totalRooms++;
-          if (desk.isOccupied) occupiedRooms++;
+          if (isOccupied) occupiedRooms++;
         }
 
         if (desk.bookings && desk.bookings.length > 0) {
@@ -145,15 +154,30 @@ const Home = () => {
         }
       });
 
-      // If the categorization didn't work, assume the known totals (216 seats, 17 rooms)
-      if (totalSeats === 0 && totalRooms === 0) {
-        // Fallback: assume 216 are seats and 17 are rooms
-        const totalDesks = desks.length;
-        totalSeats = 216;
-        totalRooms = 17;
-        // Distribute occupied proportionally if unknown
-        occupiedSeats = Math.round((occupiedSeats + occupiedRooms) * (216 / totalDesks));
-        occupiedRooms = (occupiedSeats + occupiedRooms) - occupiedSeats;
+      // If the categorization didn't work (no desks found), use fallback
+      // We know there are 216 seats and 17 rooms total
+      if (totalSeats === 0 && totalRooms === 0 && desks.length > 0) {
+        // Fallback: assume 216 are seats and rest are rooms
+        // Re-iterate to count occupied correctly
+        let seatsCounter = 0;
+        let roomsCounter = 0;
+        let occupiedSeatsCounter = 0;
+        let occupiedRoomsCounter = 0;
+        
+        desks.forEach((desk, index) => {
+          if (index < 216) {
+            seatsCounter++;
+            if (desk.isOccupied) occupiedSeatsCounter++;
+          } else {
+            roomsCounter++;
+            if (desk.isOccupied) occupiedRoomsCounter++;
+          }
+        });
+        
+        totalSeats = seatsCounter;
+        totalRooms = roomsCounter;
+        occupiedSeats = occupiedSeatsCounter;
+        occupiedRooms = occupiedRoomsCounter;
       }
 
       // Fetch users data
@@ -310,23 +334,16 @@ const Home = () => {
           transition={{ delay: 0.2 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '18px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '20px',
             marginBottom: '28px'
           }}
         >
           <StatsCard label="Total Seats" value={loading ? '...' : stats.totalSeats} icon="🪑" color="#1d4ed8" />
           <StatsCard label="Occupied Seats" value={loading ? '...' : stats.occupiedSeats} icon="👤" color="#b45309" />
-          <StatsCard label="Available Seats" value={loading ? '...' : stats.availableSeats} icon="✓" color="#166534" />
-          <StatsCard label="Seat Occupancy" value={loading ? '...' : `${stats.occupancyRateSeats}%`} icon="📊" color="#b91c1c" />
-          <StatsCard label="Total Rooms" value={loading ? '...' : stats.totalRooms} icon="🏠" color="#7c3aed" />
-          <StatsCard label="Occupied Rooms" value={loading ? '...' : stats.occupiedRooms} icon="🔒" color="#ea580c" />
-          <StatsCard label="Available Rooms" value={loading ? '...' : stats.availableRooms} icon="🔓" color="#059669" />
-          <StatsCard label="Room Occupancy" value={loading ? '...' : `${stats.occupancyRateRooms}%`} icon="📈" color="#dc2626" />
-          <StatsCard label="Total Bookings" value={loading ? '...' : stats.totalBookings} icon="📅" color="#1d4ed8" />
-          <StatsCard label="Pending" value={loading ? '...' : stats.pendingBookings} icon="⏳" color="#b45309" />
-          <StatsCard label="Accepted" value={loading ? '...' : stats.acceptedBookings} icon="✅" color="#166534" />
-          <StatsCard label="Total Users" value={loading ? '...' : stats.totalUsers} icon="👥" color="#1d4ed8" />
+          <StatsCard label="Pending Bookings" value={loading ? '...' : stats.pendingBookings} icon="⏳" color="#f97316" />
+          <StatsCard label="Accepted Bookings" value={loading ? '...' : stats.acceptedBookings} icon="✅" color="#16a34a" />
+          <StatsCard label="Declined Bookings" value={loading ? '...' : stats.declinedBookings} icon="❌" color="#dc2626" />
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
