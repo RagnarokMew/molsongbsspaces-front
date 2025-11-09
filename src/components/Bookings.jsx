@@ -185,6 +185,14 @@ function Bookings() {
     }
   };
 
+  // Shorten booking ids for display (e.g. '632af3b9...' or fallback to location)
+  const truncateId = (id) => {
+    if (!id) return '';
+    const s = String(id);
+    if (s.length <= 10) return s;
+    return `${s.slice(0, 8)}...`;
+  };
+
   // Map status to the project's chip token (colors/icons/labels)
   const getStatusToken = (status = 'pending') => {
     const s = String(status || '').toLowerCase();
@@ -343,7 +351,7 @@ function Bookings() {
                           );
                         })()}
                     </div>
-                    <div style={{ color: '#475569', fontSize: 14 }}>📍 {booking.location}</div>
+                    <div style={{ color: '#475569', fontSize: 14 }}>#{truncateId(booking.id) || booking.location}</div>
                     <div style={{ color: '#1e293b', marginTop: 6, fontSize: 13 }}>{formatDateTime(booking.start)} • {formatDateTime(booking.end)}</div>
                   </div>
 
