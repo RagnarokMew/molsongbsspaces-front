@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import BubbleLegendChips from './BubbleLegendChips';
 
 const FloorPlanLegend = ({ currentTime }) => {
   const containerVariants = {
@@ -188,9 +187,6 @@ const FloorPlanLegend = ({ currentTime }) => {
           />
           <span style={{ fontSize: '13px', color: '#475569', fontWeight: '600' }}>Hover to see</span>
         </motion.div>
-
-        {/* Bubble room legend chips with improved styling */}
-        <BubbleLegendChips />
       </div>
 
       {/* Add keyframes for shimmer animation */}
