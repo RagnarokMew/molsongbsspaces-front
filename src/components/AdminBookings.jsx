@@ -6,12 +6,29 @@ const AdminBookings = () => {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null);
   const [processedBookings, setProcessedBookings] = useState(new Set());
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1024
+  );
 
   useEffect(() => {
     fetchPendingBookings();
     const interval = setInterval(fetchPendingBookings, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isTablet = viewportWidth <= 1024;
+  const isMobile = viewportWidth <= 640;
 
   const fetchPendingBookings = async () => {
     try {
@@ -215,8 +232,8 @@ const AdminBookings = () => {
     background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
     border: '1px solid rgba(148, 163, 184, 0.25)',
     borderRadius: '16px',
-    padding: '20px 28px',
-    minWidth: '200px',
+    padding: 'clamp(16px, 2vw, 20px) clamp(20px, 4vw, 28px)',
+    minWidth: 'min(200px, 100%)',
     boxShadow: '0 12px 24px rgba(15, 23, 42, 0.08)',
     textAlign: 'center'
   };
@@ -260,9 +277,9 @@ const AdminBookings = () => {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #dbeafe 100%)',
-        padding: '40px 24px',
+        padding: isMobile ? '24px 16px 36px' : isTablet ? '32px 20px 44px' : '40px 24px 52px',
         position: 'relative',
-        overflow: 'hidden'
+        overflowX: 'hidden'
       }}
     >
       <div
@@ -299,10 +316,12 @@ const AdminBookings = () => {
 
       <div
         style={{
-          maxWidth: '1400px',
+          maxWidth: isTablet ? '100%' : '1320px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          width: '100%',
+          padding: isMobile ? '0' : '0 8px'
         }}
       >
         <motion.div
@@ -310,23 +329,25 @@ const AdminBookings = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           style={{
-            marginBottom: '36px'
+            marginBottom: isMobile ? '26px' : '36px'
           }}
         >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: isTablet ? 'center' : 'space-between',
               flexWrap: 'wrap',
-              gap: '20px'
+              gap: isMobile ? '16px' : '20px',
+              textAlign: isTablet ? 'center' : 'left'
             }}
           >
             <div
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: '18px'
+                alignItems: isTablet ? 'center' : 'flex-start',
+                gap: isMobile ? '14px' : '18px',
+                flexDirection: isTablet ? 'column' : 'row'
               }}
             >
               <motion.div
@@ -380,7 +401,11 @@ const AdminBookings = () => {
                   />
                 </svg>
               </motion.div>
-              <div>
+              <div
+                style={{
+                  textAlign: isTablet ? 'center' : 'left'
+                }}
+              >
                 <h1
                   style={{
                     fontSize: '34px',
@@ -415,11 +440,10 @@ const AdminBookings = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
           style={{
-            display: 'flex',
-            gap: '24px',
-            marginBottom: '40px',
-            flexWrap: 'wrap',
-            justifyContent: 'center'
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))',
+            gap: isMobile ? '16px' : '24px',
+            marginBottom: isMobile ? '28px' : '40px'
           }}
         >
           <motion.div
@@ -427,7 +451,8 @@ const AdminBookings = () => {
             style={{
               ...statsCardBase,
               border: '1px solid rgba(59, 130, 246, 0.2)',
-              background: 'linear-gradient(135deg, #eff6ff, #f8fafc)'
+              background: 'linear-gradient(135deg, #eff6ff, #f8fafc)',
+              height: '100%'
             }}
           >
             <div
@@ -468,7 +493,8 @@ const AdminBookings = () => {
             style={{
               ...statsCardBase,
               border: '1px solid rgba(217, 119, 6, 0.25)',
-              background: 'linear-gradient(135deg, #fff7ed, #fffbeb)'
+              background: 'linear-gradient(135deg, #fff7ed, #fffbeb)',
+              height: '100%'
             }}
           >
             <div
@@ -509,7 +535,8 @@ const AdminBookings = () => {
             style={{
               ...statsCardBase,
               border: '1px solid rgba(34, 197, 94, 0.25)',
-              background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)'
+              background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)',
+              height: '100%'
             }}
           >
             <div
@@ -550,7 +577,8 @@ const AdminBookings = () => {
             style={{
               ...statsCardBase,
               border: '1px solid rgba(248, 113, 113, 0.25)',
-              background: 'linear-gradient(135deg, #fef2f2, #fee2e2)'
+              background: 'linear-gradient(135deg, #fef2f2, #fee2e2)',
+              height: '100%'
             }}
           >
             <div
@@ -596,15 +624,15 @@ const AdminBookings = () => {
               backdropFilter: 'blur(14px)',
               border: '1px solid rgba(148, 163, 184, 0.25)',
               borderRadius: '20px',
-              padding: '48px',
+              padding: isMobile ? '32px 24px' : '48px',
               textAlign: 'center',
               boxShadow: '0 20px 45px rgba(15, 23, 42, 0.12)'
             }}
           >
             <div
               style={{
-                width: '50px',
-                height: '50px',
+                width: isMobile ? '42px' : '50px',
+                height: isMobile ? '42px' : '50px',
                 border: '3px solid rgba(14, 116, 144, 0.2)',
                 borderTop: '3px solid #1d4ed8',
                 borderRadius: '50%',
@@ -636,7 +664,7 @@ const AdminBookings = () => {
               backdropFilter: 'blur(14px)',
               border: '1px solid rgba(148, 163, 184, 0.24)',
               borderRadius: '20px',
-              padding: '70px 36px',
+              padding: isMobile ? '44px 24px' : isTablet ? '60px 32px' : '70px 36px',
               textAlign: 'center',
               boxShadow: '0 20px 45px rgba(15, 23, 42, 0.12)'
             }}
@@ -645,7 +673,7 @@ const AdminBookings = () => {
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
               style={{
-                fontSize: '64px',
+                fontSize: isMobile ? '52px' : '64px',
                 marginBottom: '20px',
                 filter: 'drop-shadow(0 0 18px rgba(34, 197, 94, 0.35))'
               }}
@@ -654,7 +682,7 @@ const AdminBookings = () => {
             </motion.div>
             <h2
               style={{
-                fontSize: '28px',
+                fontSize: isMobile ? '24px' : '28px',
                 color: '#0f172a',
                 marginBottom: '10px',
                 fontWeight: '600',
@@ -677,7 +705,12 @@ const AdminBookings = () => {
         )}
 
         {!loading && bookings.length > 0 && (
-          <div style={{ display: 'grid', gap: '24px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gap: isMobile ? '18px' : '24px'
+            }}
+          >
             {bookings.map((booking, index) => {
               const statusToken = getStatusToken(booking.status || 'pending');
               const bookingKey = booking._id || booking.id || `${booking.deskId || 'desk'}-${booking.start || index}`;
@@ -706,7 +739,7 @@ const AdminBookings = () => {
                     background: 'linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98))',
                     border: '1px solid rgba(148, 163, 184, 0.25)',
                     borderRadius: '18px',
-                    padding: '20px 24px',
+                    padding: isMobile ? '18px 18px' : isTablet ? '20px 22px' : '20px 24px',
                     boxShadow: '0 14px 32px rgba(15, 23, 42, 0.1)',
                     position: 'relative',
                     overflow: 'hidden',
@@ -730,8 +763,9 @@ const AdminBookings = () => {
                       position: 'relative',
                       zIndex: 1,
                       display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '24px',
+                      flexDirection: isTablet ? 'column' : 'row',
+                      flexWrap: isTablet ? 'nowrap' : 'wrap',
+                      gap: isMobile ? '18px' : '24px',
                       alignItems: 'stretch',
                       justifyContent: 'space-between'
                     }}
@@ -748,8 +782,9 @@ const AdminBookings = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '8px',
-                        minWidth: '170px',
-                        flex: '0 1 210px'
+                        minWidth: isTablet ? '100%' : '170px',
+                        flex: isTablet ? '1 1 100%' : '0 1 210px',
+                        width: '100%'
                       }}
                     >
                       <div style={{ fontSize: '28px' }}>🪑</div>
@@ -788,17 +823,18 @@ const AdminBookings = () => {
 
                     <div
                       style={{
-                        flex: '1 1 320px',
-                        minWidth: '260px'
+                        flex: isTablet ? '1 1 100%' : '1 1 320px',
+                        minWidth: isTablet ? '100%' : '260px'
                       }}
                     >
                       <div
                         style={{
                           display: 'flex',
+                          flexDirection: isMobile ? 'column' : 'row',
                           flexWrap: 'wrap',
-                          alignItems: 'center',
-                          gap: '10px',
-                          marginBottom: '14px'
+                          alignItems: isMobile ? 'flex-start' : 'center',
+                          gap: isMobile ? '8px' : '10px',
+                          marginBottom: isMobile ? '12px' : '14px'
                         }}
                       >
                         <div
@@ -837,8 +873,10 @@ const AdminBookings = () => {
                       <div
                         style={{
                           display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                          gap: '16px'
+                          gridTemplateColumns: isMobile
+                            ? '1fr'
+                            : 'repeat(auto-fit, minmax(220px, 1fr))',
+                          gap: isMobile ? '12px' : '16px'
                         }}
                       >
                         <div
@@ -959,11 +997,11 @@ const AdminBookings = () => {
 
                     <div
                       style={{
-                        flex: '0 0 190px',
-                        minWidth: '190px',
+                        flex: isTablet ? '1 1 100%' : '0 0 190px',
+                        minWidth: isTablet ? '100%' : '190px',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '12px'
+                        gap: isMobile ? '10px' : '12px'
                       }}
                     >
                       {isCompleted ? (
@@ -1033,6 +1071,7 @@ const AdminBookings = () => {
                               alignItems: 'center',
                               justifyContent: 'center',
                               gap: '8px',
+                              width: isTablet ? '100%' : 'auto',
                               letterSpacing: '0.6px',
                               textTransform: 'uppercase'
                             }}
@@ -1062,6 +1101,7 @@ const AdminBookings = () => {
                               alignItems: 'center',
                               justifyContent: 'center',
                               gap: '8px',
+                              width: isTablet ? '100%' : 'auto',
                               letterSpacing: '0.6px',
                               textTransform: 'uppercase'
                             }}
