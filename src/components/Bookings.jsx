@@ -100,11 +100,11 @@ function Bookings() {
         const raw = (data && (data.data || data.bookings || data.positions || data)) || [];
 
         const mapStatus = (s) => {
-          if (!s) return 'pending';
+          if (!s) return 'unknown';
           const lower = String(s).toLowerCase();
-          if (lower === 'accepted' || lower === 'approved' || lower === 'upcoming') return 'upcoming';
+          if (lower === 'accepted') return 'upcoming';
           if (lower === 'pending') return 'pending';
-          if (lower === 'declined' || lower === 'cancelled' || lower === 'rejected') return 'cancelled';
+          if (lower === 'declined') return 'declined';
           return lower;
         };
 
@@ -183,6 +183,40 @@ function Bookings() {
     } catch (e) {
       return dateString;
     }
+  };
+
+  // Map status to the project's chip token (colors/icons/labels)
+  const getStatusToken = (status = 'pending') => {
+    const s = String(status || '').toLowerCase();
+    // treat 'upcoming' as accepted for display purposes
+    if (s === 'upcoming' || s === 'accepted' || s === 'approved') {
+      return {
+        chipBg: 'linear-gradient(135deg, #dcfce7, #bbf7d0)',
+        chipBorder: '1px solid rgba(34, 197, 94, 0.35)',
+        chipColor: '#166534',
+        icon: '✓',
+        label: 'Accepted'
+      };
+    }
+
+    if (s === 'declined' || s === 'cancelled' || s === 'rejected') {
+      return {
+        chipBg: 'linear-gradient(135deg, #fee2e2, #fecaca)',
+        chipBorder: '1px solid rgba(239, 68, 68, 0.35)',
+        chipColor: '#991b1b',
+        icon: '✗',
+        label: 'Declined'
+      };
+    }
+
+    // default -> pending
+    return {
+      chipBg: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+      chipBorder: '1px solid rgba(251, 191, 36, 0.45)',
+      chipColor: '#92400e',
+      icon: '⏳',
+      label: 'Pending'
+    };
   };
 
   const infoCardBase = {
@@ -298,24 +332,22 @@ function Bookings() {
             {bookings.map((booking, index) => {
               const bookingKey = booking.id || `${booking.deskName}-${index}`;
               return (
-                <motion.div className="booking-card" key={bookingKey} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} whileHover={{ y: -4 }} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,249,0.96))', border: '1px solid rgba(148,163,184,0.12)', padding: 18, borderRadius: 12, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'center' }}>
+                <motion.div className="booking-card" key={bookingKey} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} whileHover={{ y: -4 }} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,249,0.96))', border: '1px solid rgba(148,163,184,0.12)', padding: 18, borderRadius: 12, display: 'grid', gridTemplateColumns: '1fr', gap: 12, alignItems: 'center' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                       <h4 style={{ margin: 0, color: '#0f172a', fontSize: 16 }}>{booking.deskName}</h4>
-                      <span style={{ backgroundColor: '#f0fdf4', color: '#14532d', padding: '6px 10px', borderRadius: 9999, fontSize: 12, fontWeight: 700, border: `1px solid rgba(34,197,94,0.12)` }}>{booking.status}</span>
+                        {(() => {
+                          const token = getStatusToken(booking.status);
+                          return (
+                            <span style={{ background: token.chipBg, color: token.chipColor, padding: '6px 10px', borderRadius: 9999, fontSize: 12, fontWeight: 700, border: token.chipBorder, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>{token.icon} {token.label}</span>
+                          );
+                        })()}
                     </div>
                     <div style={{ color: '#475569', fontSize: 14 }}>📍 {booking.location}</div>
                     <div style={{ color: '#1e293b', marginTop: 6, fontSize: 13 }}>{formatDateTime(booking.start)} • {formatDateTime(booking.end)}</div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {booking.status === 'upcoming' ? (
-                      <>
-                      </>
-                    ) : (
-                      <div style={{ color: '#64748b', fontSize: 13, textAlign: 'right' }}>Completed</div>
-                    )}
-                  </div>
+                  {/* Removed 'Completed' tag per request */}
                 </motion.div>
               );
             })}
